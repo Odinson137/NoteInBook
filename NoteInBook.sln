@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteInBook", "NoteInBook\NoteInBook.csproj", "{9A48D978-B618-4EE9-B458-7CF366974E86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Note2Book", "Note2Book\Note2Book.csproj", "{C27B387E-2ACD-44E7-9635-BA4088EA9974}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9A48D978-B618-4EE9-B458-7CF366974E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A48D978-B618-4EE9-B458-7CF366974E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A48D978-B618-4EE9-B458-7CF366974E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A48D978-B618-4EE9-B458-7CF366974E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C27B387E-2ACD-44E7-9635-BA4088EA9974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C27B387E-2ACD-44E7-9635-BA4088EA9974}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C27B387E-2ACD-44E7-9635-BA4088EA9974}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C27B387E-2ACD-44E7-9635-BA4088EA9974}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
