@@ -1,4 +1,4 @@
-namespace Note2Book.Models;
+namespace Note2Book.ViewModels;
 
 public class ErrorViewModel
 {

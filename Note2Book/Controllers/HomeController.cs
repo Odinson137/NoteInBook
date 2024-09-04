@@ -1,20 +1,24 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Note2Book.Models;
+using Microsoft.EntityFrameworkCore;
+using Note2Book.Data;
+using Note2Book.ViewModels;
 
 namespace Note2Book.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    private readonly DataContext _context;
+    public HomeController(ILogger<HomeController> logger, DataContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var assdf = await _context.Chapters.FirstAsync();
         var model = new
         {
             Name = "sdf",
