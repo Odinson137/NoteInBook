@@ -6,7 +6,10 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+services
+    .AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
+
 
 services.AddDbContext<DataContext>(option => option.UseMySql(
         configuration["MySql:ConnectionString"],

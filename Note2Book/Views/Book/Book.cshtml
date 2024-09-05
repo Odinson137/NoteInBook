@@ -1,0 +1,78 @@
+﻿@model Note2Book.Models.Book
+
+@{ }
+
+<div class="book-details">
+    <div class="book-header">
+        <h1>@Model.Title</h1>
+        <img src="@Model.Image" alt="Обложка книги" class="book-image" style="width: 300px;"/>
+    </div>
+
+    <div class="book-info">
+        <h3>Описание</h3>
+        <p>@Model.Description</p>
+
+        <h4>Автор</h4>
+        <p>@Model.Author.Name @Model.Author.LastName</p>
+
+        <h4>Жанры</h4>
+        <ul>
+            @if (Model.Genres.Any())
+            {
+                @foreach (var genre in Model.Genres)
+                {
+                    <li>@genre.Title</li>
+                }          
+            }
+        </ul>
+
+        <h4>Главы</h4>
+        <ul>
+            @if (Model.Chapters.Any())
+            {
+                @foreach (var chapter in Model.Chapters)
+                {
+                    <li>@chapter.Title</li>
+                }
+            }
+        </ul>
+
+        <h5>Дата создания: @Model?.CreateAt.ToShortDateString()</h5>
+    </div>
+</div>
+
+<style>
+    .book-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+    }
+
+    .book-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .book-image {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .book-info {
+        width: 80%;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h3, h4, h5 {
+        margin-top: 10px;
+    }
+
+    ul {
+        list-style: disc;
+        margin-left: 20px;
+    }
+</style>

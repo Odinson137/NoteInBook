@@ -1,0 +1,74 @@
+﻿@model System.Collections.Generic.List<Note2Book.Models.Book>
+
+@{
+ViewBag.Title = "Книги";
+Layout = "_Layout";
+}
+
+<h2 class="page-title">Список книг</h2>
+
+<div class="book-grid">
+    @foreach (var book in Model)
+    {
+    <div class="book-card">
+        <h3>@book.Title</h3>
+        <img style="width: 200px;" class="image" src="@book.Image" alt="Изображение книги" />
+        <p>
+            @if (book.Description.Length > 200)
+            {
+                @book.Description.Substring(0, 200)<p>...</p>
+            }
+            else
+            {
+            @book.Description
+            }
+        </p>
+        <a href="@Url.Action("Book", "Book", new { id = book.Id })" class="btn btn-primary">Подробнее</a>
+    </div>
+    }
+</div>
+
+<style>
+    .page-title {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2em;
+    }
+    .book-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Три колонки */
+        gap: 20px;
+    }
+    .book-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .book-card h3 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+    }
+    .book-card img {
+        display: block;
+        margin: 0 auto 10px;
+        height: 300px; /* Увеличение высоты изображения */
+    }
+    .book-card p {
+        font-size: 0.9em;
+        color: #555;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
