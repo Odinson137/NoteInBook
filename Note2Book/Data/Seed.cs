@@ -31,14 +31,30 @@ public class Seed
         }
 
 
-        var user = new User
+        var user1 = new User
         {
             Name = "Яна",
             Login = "yanix",
             Password = "12345678",
         };
-
-        await _context.AddRangeAsync(user);
+        
+        var user2 = new User
+        {
+            Name = "Юра",
+            Login = "Odinson",
+            Password = "123456789",
+        };
+        
+        var user3 = new User
+        {
+            Name = "Юлия",
+            Login = "yulik",
+            Password = "2222222222",
+        };
+        
+        await _context.AddRangeAsync(user1);
+        await _context.AddRangeAsync(user2);
+        await _context.AddRangeAsync(user3);
         
         var berserkAuthor  = new Author
         {
@@ -348,11 +364,74 @@ public class Seed
             },
             Author = instituteAuthor
         };
+
+        var bookComment1 = new BookComment
+        {
+            Author = user1,
+            Book = book1,
+            Text = "Ну прикольно!"
+        };
+        
+        var bookComment2 = new BookComment
+        {
+            Author = user2,
+            Book = book4,
+            Text = "Книга - Огонь!"
+        };
+        
+        var bookComment3 = new BookComment
+        {
+            Author = user3,
+            Book = book5,
+            Text = "Не понравилось, могли бы что-то и оригинальнее придумать!"
+        };
+        
+        var note1 = new Note
+        {
+            Author = user1,
+            Text = "Большой стакан наполняют мукой, утрамбовывают ее как следует, а потом склеившийся кусок выкладывают на поднос и сверху помещают шестипенсовик. Каждый аккуратно отрезает кусочек, чтобы не свалить монету. Тот, кто ее сбрасывает, выбывает из игры. Оставшийся последним получает шесть пенсов. Ну, давайте начинать."
+        };
+        
+        var note2 = new Note
+        {
+            Author = user2,
+            Text = "Из библиотеки, где играли в «Поймай яблоко», доносились возбужденные вопли. Участники состязания возвращались оттуда залитые водой и с мокрыми волосами."
+        };
+        
+        var folder1 = new Folder
+        {
+            User = user1,
+            Text = "Одесса 2009",
+            Notes = new List<Note>
+            {
+                note1, 
+            },
+        };
+        var folder2 = new Folder
+        {
+            User = user2,
+            Text = "Анапа 2005",
+            Notes = new List<Note>
+            {
+            note2, 
+        },
+        };
+        
         await _context.AddRangeAsync(book1);
         await _context.AddRangeAsync(book2);
         await _context.AddRangeAsync(book3);
         await _context.AddRangeAsync(book4);
         await _context.AddRangeAsync(book5);
+        
+        await _context.AddRangeAsync(note1);
+        await _context.AddRangeAsync(note2);
+        
+        await _context.AddRangeAsync(folder1);
+        await _context.AddRangeAsync(folder2);
+        
+        await _context.AddRangeAsync(bookComment1);
+        await _context.AddRangeAsync(bookComment2);
+        await _context.AddRangeAsync(bookComment3);
         
         await _context.SaveChangesAsync();
     }
