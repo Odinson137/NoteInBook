@@ -1,13 +1,11 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
 using Note2Book.Models;
-using Note2Book.ViewModels;
 
 namespace Note2Book.Controllers;
 
-[Route("Book")]
+[Route("[controller]")]
 public class BookController : Controller
 {
     private readonly DataContext _context;

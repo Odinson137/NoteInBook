@@ -16,18 +16,17 @@ public class Seed
     {
         if (await _context.Users.AnyAsync())
         {
-            // _context.Books.RemoveRange(_context.Books);
-            // _context.Users.RemoveRange(_context.Users);
-            // _context.Chapters.RemoveRange(_context.Chapters);
-            // _context.Favorites.RemoveRange(_context.Favorites);
-            // _context.Folders.RemoveRange(_context.Folders);
-            // _context.Genres.RemoveRange(_context.Genres);
-            // _context.BookComments.RemoveRange(_context.BookComments);
-            // _context.Notes.RemoveRange(_context.Notes);
-            // _context.Authors.RemoveRange(_context.Authors);
-            //
-            // await _context.SaveChangesAsync();
-            return;
+            _context.Books.RemoveRange(_context.Books);
+            _context.Users.RemoveRange(_context.Users);
+            _context.Chapters.RemoveRange(_context.Chapters);
+            _context.Favorites.RemoveRange(_context.Favorites);
+            _context.Folders.RemoveRange(_context.Folders);
+            _context.Genres.RemoveRange(_context.Genres);
+            _context.BookComments.RemoveRange(_context.BookComments);
+            _context.Notes.RemoveRange(_context.Notes);
+            _context.Authors.RemoveRange(_context.Authors);
+            
+            await _context.SaveChangesAsync();
         }
 
 
