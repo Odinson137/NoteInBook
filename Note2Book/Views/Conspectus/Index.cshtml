@@ -1,8 +1,53 @@
 ﻿@model System.Collections.Generic.List<Note2Book.Models.Folder>
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+ViewBag.Title = "Список папок";
+Layout = "_Layout";
 }
 
-<h2>title</h2>
+<div class="container">
+    <h2 class="text-center my-4 display-4">Мои папки</h2>
+
+    <!-- Ряд карточек -->
+    <div class="row justify-content-center">
+        @foreach (var folder in Model)
+        {
+        <div class="col-md-4 mb-4 d-flex align-items-stretch">
+            <!-- Карточка с ховером и тенью -->
+            <a href="@Url.Action("Index", "Note", new { folderId = folder.Id })" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-lg" style="transition: transform 0.3s, box-shadow 0.3s; border-radius: 20px;">
+                    <img class="card-img-top mx-auto mt-4" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 150px; width: 150px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title mt-3">@folder.Text</h5>
+                        <p class="card-text text-muted">
+                            <strong>Дата создания:</strong> @folder.CreatedAt.ToString("dd MMM yyyy") <br />
+                            <strong>Количество документов:</strong> @folder.Notes.Count
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        }
+    </div>
+</div>
+
+<!-- Стили для красоты -->
+<style>
+    a:hover .card {
+        transform: scale(1.05);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+    }
+    .card-title {
+        font-weight: bold;
+        font-size: 1.25rem;
+    }
+    .card:hover .card-title {
+        color: #007bff;
+    }
+    .card-img-top {
+        transition: transform 0.3s;
+    }
+    .card:hover .card-img-top {
+        transform: rotate(10deg);
+    }
+</style>

@@ -21,6 +21,7 @@ public class ConspectusController : Controller
             {
                 Id = c.Id,
                 Text = c.Text,
+                ImageUrl = c.ImageUrl,
                 Notes = c.Notes.Select(x => new Note
                 {
                     Id = x.Id,
@@ -37,42 +38,10 @@ public class ConspectusController : Controller
                     Id = c.User.Id,
                     Name = c.User.Name,
                 },
+                CreatedAt = c.CreatedAt
             })
             .ToListAsync();
         return View(folders);
     }
 
-    // [HttpGet("{id:int}")]
-    // public async Task<IActionResult> Book(int id)
-    // {
-    //     var book = await _context.Books
-    //         .Where(c => c.Id == id)
-    //         .Select(c => new Book
-    //         {
-    //             Id = c.Id,
-    //             Title = c.Title,
-    //             Description = c.Description,
-    //             Genres = c.Genres.Select(x => new Genre()
-    //             {
-    //                 Id = x.Id,
-    //                 Title = x.Title
-    //             }).ToList(),
-    //             CreateAt = c.CreateAt,
-    //             Image = c.Image,
-    //             Chapters = c.Chapters.Select(x => new Chapter()
-    //             {
-    //                 Id = x.Id, 
-    //                 Title = x.Title
-    //             }).ToList(),
-    //             Author = new Author()
-    //             {
-    //                 Id = c.Author.Id,
-    //                 Name = c.Author.Name,
-    //                 LastName = c.Author.LastName,
-    //             }
-    //         })
-    //         .FirstOrDefaultAsync();
-    //     
-    //     return View(book);
-    // }
 }

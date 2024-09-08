@@ -388,12 +388,14 @@ public class Seed
         var note1 = new Note
         {
             Author = user1,
+            Title = "Стакан полон или пуст?",
             Text = "Большой стакан наполняют мукой, утрамбовывают ее как следует, а потом склеившийся кусок выкладывают на поднос и сверху помещают шестипенсовик. Каждый аккуратно отрезает кусочек, чтобы не свалить монету. Тот, кто ее сбрасывает, выбывает из игры. Оставшийся последним получает шесть пенсов. Ну, давайте начинать."
         };
         
         var note2 = new Note
         {
             Author = user2,
+            Title = "Что нибудь красивое с",
             Text = "Из библиотеки, где играли в «Поймай яблоко», доносились возбужденные вопли. Участники состязания возвращались оттуда залитые водой и с мокрыми волосами."
         };
         
@@ -401,6 +403,7 @@ public class Seed
         {
             User = user1,
             Text = "Одесса 2009",
+            ImageUrl = "images/blackfolder.png",
             Notes = new List<Note>
             {
                 note1, 
@@ -410,10 +413,11 @@ public class Seed
         {
             User = user2,
             Text = "Анапа 2005",
+            ImageUrl = "images/folder.png",
             Notes = new List<Note>
             {
-            note2, 
-        },
+                note2,
+            },
         };
         
         await _context.AddRangeAsync(book1);
