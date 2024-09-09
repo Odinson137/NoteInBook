@@ -1,7 +1,12 @@
 using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
+using Note2Book.Models;
 using Note2Book.ViewModels;
 
 namespace Note2Book.Controllers;
@@ -16,18 +21,9 @@ public class UserController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
-    {
-        var assdf = await _context.Chapters.FirstAsync();
-        var model = new
-        {
-            Name = "sdf",
-            Test = "sdf"
-        };
-        return View(model);
-    }
-
+   
     [HttpGet]
+    [Route("Login")]
     public IActionResult Login()
     {
         var response = new LoginViewModel();
@@ -35,35 +31,44 @@ public class UserController : Controller
     }
 
     [HttpPost]
+    [Route("Login")]
     public async Task<IActionResult> Login(LoginViewModel loginViewModel)
     {
         if (!ModelState.IsValid) return View(loginViewModel);
 
-        // var user = await _userManager.FindByEmailAsync(loginViewModel.EmailAddress);
-        //
-        // if (user != null)
-        // {
-        //     //User is found, check password
-        //     var passwordCheck = await _userManager.CheckPasswordAsync(user, loginViewModel.Password);
-        //     if (passwordCheck)
-        //     {
-        //         //Password correct, sign in
-        //         var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
-        //         if (result.Succeeded)
-        //         {
-        //             return RedirectToAction("Index", "Race");
-        //         }
-        //     }
-        //     //Password is incorrect
-        //     TempData["Error"] = "Wrong credentials. Please try again";
-        //     return View(loginViewModel);
-        // }
-        // //User not found
-        // TempData["Error"] = "Wrong credentials. Please try again";
-        return View(loginViewModel);
+        // Поиск пользователя по логину
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == loginViewModel.Login);
+    
+        if (user == null)
+        {
+            TempData["Error"] = "Пользователь не найден";
+            return View(loginViewModel);
+        }
+
+        // Проверка пароля
+        if (user.Password != loginViewModel.Password)
+        {
+            TempData["Error"] = "Неправильный пароль";
+            return View(loginViewModel);
+        }
+
+        // Успешная аутентификация, создание куки
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Name),
+            new Claim(ClaimTypes.NameIdentifier, user.Login)
+        };
+
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+        return RedirectToAction("Index", "Home");
     }
 
+
     [HttpGet]
+    [Route("Register")]
     public IActionResult Register()
     {
         var response = new RegisterViewModel();
@@ -71,39 +76,37 @@ public class UserController : Controller
     }
 
     [HttpPost]
+    [Route("Register")]
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
     {
         if (!ModelState.IsValid) return View(registerViewModel);
 
-        // var user = await _userManager.FindByEmailAsync(registerViewModel.EmailAddress);
-        // if (user != null)
-        // {
-        //     TempData["Error"] = "This email address is already in use";
-        //     return View(registerViewModel);
-        // }
+        if (registerViewModel.Password != registerViewModel.RepeatPassword)
+        {
+            return View(registerViewModel);
+        }
+        
+        var user = new User
+        {
+            Name = registerViewModel.Name,
+            Login = registerViewModel.Login,
+            Password = registerViewModel.Password,
+        };
+        
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+        
+        
 
-        // var newUser = new AppUser()
-        // {
-        //     Email = registerViewModel.EmailAddress,
-        //     UserName = registerViewModel.EmailAddress
-        // };
-        // var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
-        //
-        // if (newUserResponse.Succeeded)
-        //     await _userManager.AddToRoleAsync(newUser, UserRoles.User);
-
-        return RedirectToAction("Index", "Race");
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
+    [Route("Logout")]
     public async Task<IActionResult> Logout()
     {
-        return RedirectToAction("Index", "Race");
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
     }
-    
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+
 }

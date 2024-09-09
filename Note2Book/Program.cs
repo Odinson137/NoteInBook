@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
 
@@ -17,6 +18,12 @@ services.AddDbContext<DataContext>(option => option.UseMySql(
     )
 );
 
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/User/Login";
+        options.AccessDeniedPath = "/User/AccessDenied";
+    });
 services.AddScoped<Seed>();
 
 var app = builder.Build();
@@ -35,7 +42,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllerRoute(
