@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
@@ -6,6 +7,7 @@ using Note2Book.Models;
 namespace Note2Book.Controllers;
 
 [Route("[controller]")]
+[Authorize]
 public class NoteController : Controller
 {
     private readonly DataContext _context;
@@ -17,8 +19,20 @@ public class NoteController : Controller
 
     public async Task<IActionResult> Index(int folderId, string? search)
     {
+        // Извлекаем userId из куки
+        var userIdCookie = Request.Cookies["UserId"];
+        if (userIdCookie == null)
+        {
+            // Если куки нет, перенаправляем пользователя на страницу логина
+            return RedirectToAction("Login", "User");
+        }
+        
+        // Преобразуем userId из строки в int (если используется int в базе данных)
+        int userId = int.Parse(userIdCookie);
+        
         var query = _context.Folders
             .Where(c => c.Id == folderId)
+            .Where(c=>c.User.Id == userId)
             .SelectMany(c => c.Notes)
             .Select(c => new Note
             {
@@ -49,7 +63,7 @@ public class NoteController : Controller
     [HttpGet("Edit/{id}")]
     public async Task<IActionResult> Edit(int id)
     {
-        var note = await _context.Notes
+       var note = await _context.Notes
             .Select(c => new Note
                 {
                     Id = c.Id,
@@ -123,7 +137,19 @@ public class NoteController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(int folderId, Note newNote)
     {
-        var user = await _context.Users.FirstAsync();
+        // Извлекаем userId из куки
+        var userIdCookie = Request.Cookies["UserId"];
+        if (userIdCookie == null)
+        {
+            // Если куки нет, перенаправляем пользователя на страницу логина
+            return RedirectToAction("Login", "User");
+        }
+        
+        // Преобразуем userId из строки в int (если используется int в базе данных)
+        int userId = int.Parse(userIdCookie);
+        ViewBag.FolderId = folderId;
+        
+        var user = await _context.Users.FirstAsync(c => c.Id == userId);
         var folder = await _context.Folders.Include(c => c.Notes).FirstAsync(c => c.Id == folderId);
         
         newNote.Author = user;
@@ -131,5 +157,6 @@ public class NoteController : Controller
         folder.Notes.Add(newNote);
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Edit), new { newNote.Id});
+        
     }
 }

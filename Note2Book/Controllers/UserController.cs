@@ -62,7 +62,8 @@ public class UserController : Controller
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
+        
+        Response.Cookies.Append("UserId", user.Id.ToString());
         return RedirectToAction("Index", "Home");
     }
 

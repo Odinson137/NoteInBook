@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
@@ -6,6 +7,7 @@ using Note2Book.Models;
 namespace Note2Book.Controllers;
 
 [Route("[controller]")]
+[Authorize]
 public class ConspectusController : Controller
 {
     private readonly DataContext _context;
@@ -16,6 +18,17 @@ public class ConspectusController : Controller
 
     public async Task<IActionResult> Index()
     {
+         // Извлекаем userId из куки
+            var userIdCookie = Request.Cookies["UserId"];
+            if (userIdCookie == null)
+            {
+                // Если куки нет, перенаправляем пользователя на страницу логина
+                return RedirectToAction("Login", "User");
+            }
+        
+            // Преобразуем userId из строки в int (если используется int в базе данных)
+            int userId = int.Parse(userIdCookie);
+            
         var folders = await _context.Folders
             .Select(c => new Folder
             {
@@ -40,8 +53,57 @@ public class ConspectusController : Controller
                 },
                 CreatedAt = c.CreatedAt
             })
+            .Where(c => c.User.Id == userId)
             .ToListAsync();
         return View(folders);
+    }
+    [HttpGet]
+    [Route("Create")]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Folder model)
+    {
+        if (ModelState.IsValid)
+        {
+            var userIdCookie = Request.Cookies["UserId"];
+            if (userIdCookie == null) return RedirectToAction("Login", "User");
+
+            int userId = int.Parse(userIdCookie);
+
+            var folder = new Folder
+            {
+                Text = model.Text,
+                ImageUrl = model.ImageUrl, // Добавьте поле для ввода URL изображения
+                User = await _context.Users.FirstAsync(u => u.Id == userId),
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Folders.Add(folder);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+        return View(model);
+    }
+    [HttpGet("Delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var folder = await _context.Folders.FindAsync(id);
+        if (folder == null)
+        {
+            return NotFound();
+        }
+
+        // Удаляем папку
+        _context.Folders.Remove(folder);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index");
     }
 
 }

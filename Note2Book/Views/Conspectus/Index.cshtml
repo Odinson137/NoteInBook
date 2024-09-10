@@ -8,6 +8,11 @@ Layout = "_Layout";
 <div class="container">
     <h2 class="text-center my-4 display-4">Мои папки</h2>
 
+    <!-- Кнопка для создания новой папки -->
+    <div class="text-right mb-4">
+        <a href="@Url.Action("Create", "Conspectus")" class="btn btn-primary btn-lg" style="border-radius: 10px;">Создать новую папку</a>
+    </div>
+
     <!-- Ряд карточек -->
     <div class="row justify-content-center">
         @foreach (var folder in Model)
@@ -26,12 +31,23 @@ Layout = "_Layout";
                     </div>
                 </div>
             </a>
+            <!-- Кнопка удаления папки -->
+            <button class="btn btn-danger btn-sm mt-2 mx-auto" onclick="confirmDelete('@folder.Id')">Удалить</button>
         </div>
         }
     </div>
 </div>
 
-<!-- Стили для красоты -->
+<!-- Скрипт для подтверждения удаления -->
+<script>
+    function confirmDelete(folderId) {
+        if (confirm("Вы уверены, что хотите удалить эту папку?")) {
+            window.location.href = '@Url.Action("Delete", "Conspectus")/' + folderId;
+        }
+    }
+</script>
+
+<!-- Стили -->
 <style>
     a:hover .card {
         transform: scale(1.05);

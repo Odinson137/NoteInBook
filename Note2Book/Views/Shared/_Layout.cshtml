@@ -25,20 +25,22 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
                     </li>
+
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                    <!-- Раздел Conspectus отображается только для авторизованных пользователей -->
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Conspectus" asp-action="Index">Conspectus</a>
                     </li>
 
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
-                    <!-- Если пользователь авторизован, показать кнопку "Выйти" -->
+                    <!-- Кнопка выхода -->
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
                     </li>
                     }
                     else
                     {
-                    <!-- Если пользователь не авторизован, показать "Sign in" и "Sign up" -->
+                    <!-- Кнопки регистрации и входа для неавторизованных пользователей -->
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Sign in</a>
                     </li>
