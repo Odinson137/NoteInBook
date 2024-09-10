@@ -32,24 +32,33 @@ Layout = "_Layout";
     <div class="row">
         @foreach (var note in Model)
         {
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-lg" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); padding: 20px;">
-                <div class="card-body">
-                    <h5 class="card-title" style="color: #283C63; font-size: 1.5rem; font-weight: bold;">@note.Title</h5>
-                    <p class="card-text" style="color: #555;"><strong>Дата создания:</strong> @note.DateTime.ToString("dd MMM yyyy")</p>
-                    <p class="card-text" style="color: #555;"><strong>Автор:</strong> @note.Author.Name</p>
-                    <p class="card-text" style="color: #333; line-height: 1.6;">@Html.Raw(note.Text)</p>
-                </div>
-                <div class="card-footer text-right">
-                    <a href="@Url.Action("Edit", "Note", new { id = note.Id })" class="btn btn-lg" style="background-color: #4B0082; color: white; border-radius: 10px; padding: 8px 16px;">
-                        Редактировать
-                    </a>
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-lg" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); padding: 20px;">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #283C63; font-size: 1.5rem; font-weight: bold;">@note.Title</h5>
+                        <p class="card-text" style="color: #555;"><strong>Дата создания:</strong> @note.DateTime.ToString("dd MMM yyyy")</p>
+                        <p class="card-text" style="color: #555;"><strong>Автор:</strong> @note.Author.Name</p>
+                        <p class="card-text" style="color: #333; line-height: 1.6;">@Html.Raw(note.Text)</p>
+                    </div>
+                    <div class="card-footer text-right">
+                        <a href="@Url.Action("Edit", "Note", new { id = note.Id })" class="btn btn-lg" style="background-color: #4B0082; color: white; border-radius: 10px; padding: 8px 16px;">
+                            Редактировать
+                        </a>
+                        <button class="btn btn-danger btn-sm mt-2 mx-auto" onclick="confirmDelete('@note.Id')">Удалить</button>
+                    </div>
                 </div>
             </div>
-        </div>
         }
     </div>
 </div>
+
+<script>
+    function confirmDelete(folderId) {
+        if (confirm("Вы уверены, что хотите удалить эту папку?")) {
+            window.location.href = '@Url.Action("Delete", "Note")/' + folderId;
+        }
+    }
+</script>
 
 <!-- Стили -->
 <style>

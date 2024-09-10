@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Note2Book.Data;
 using Note2Book.Models;
 
@@ -158,5 +159,24 @@ public class NoteController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Edit), new { newNote.Id});
         
+    }
+    
+    [HttpGet("Delete/{id}")]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var note = await _context.Notes.FindAsync(id);
+
+        var folderId = await _context.Folders
+            .Where(c => c.Notes.Any(x => x.Id == id))
+            .Select(c => c.Id)
+            .FirstAsync();
+        
+        if (note != null)
+        {
+            _context.Notes.Remove(note);
+            await _context.SaveChangesAsync();
+        }
+        
+        return RedirectToAction(nameof(Index), new {folderId});
     }
 }

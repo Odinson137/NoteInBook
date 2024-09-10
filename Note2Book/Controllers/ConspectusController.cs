@@ -65,30 +65,27 @@ public class ConspectusController : Controller
     }
 
     [HttpPost]
+    [Route("Create")]
     public async Task<IActionResult> Create(Folder model)
     {
-        if (ModelState.IsValid)
+        var userIdCookie = Request.Cookies["UserId"];
+        if (userIdCookie == null) return RedirectToAction("Login", "User");
+
+        int userId = int.Parse(userIdCookie);
+
+        var user = await _context.Users.FirstAsync(u => u.Id == userId);
+        
+        var folder = new Folder
         {
-            var userIdCookie = Request.Cookies["UserId"];
-            if (userIdCookie == null) return RedirectToAction("Login", "User");
+            Text = model.Text,
+            ImageUrl = model.ImageUrl ?? "images/folder.png", // Добавьте поле для ввода URL изображения
+            User = user,
+        };
 
-            int userId = int.Parse(userIdCookie);
+        _context.Folders.Add(folder);
+        await _context.SaveChangesAsync();
 
-            var folder = new Folder
-            {
-                Text = model.Text,
-                ImageUrl = model.ImageUrl, // Добавьте поле для ввода URL изображения
-                User = await _context.Users.FirstAsync(u => u.Id == userId),
-                CreatedAt = DateTime.Now
-            };
-
-            _context.Folders.Add(folder);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index");
-        }
-
-        return View(model);
+        return RedirectToAction("Index");
     }
     [HttpGet("Delete/{id}")]
     public async Task<IActionResult> Delete(int id)

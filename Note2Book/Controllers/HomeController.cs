@@ -6,7 +6,6 @@ using Note2Book.ViewModels;
 
 namespace Note2Book.Controllers;
 
-[Route("[controller]")]
 public class HomeController : Controller
 {
     private readonly DataContext _context;

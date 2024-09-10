@@ -14,9 +14,9 @@ Layout = "_Layout";
         <h3>@book.Title</h3>
         <img style="width: 200px;" class="image" src="@book.Image" alt="Изображение книги" />
         <p>
-            @if (book.Description.Length > 200)
+            @if (book.Description.Length > 300)
             {
-                @book.Description.Substring(0, 200)<p>...</p>
+                @book.Description.Substring(0, 300)<p>...</p>
             }
             else
             {

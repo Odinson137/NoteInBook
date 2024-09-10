@@ -15,6 +15,16 @@ public class DataContext : DbContext
             if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
         }
     }
+    
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<Folder>()
+            .HasMany(c => c.Notes)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 
     public DbSet<Book> Books { get; set; }
     public DbSet<Genre> Genres { get; set; }
