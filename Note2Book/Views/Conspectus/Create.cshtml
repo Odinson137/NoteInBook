@@ -1,23 +1,73 @@
 ﻿@model Note2Book.Models.Folder
 
 @{
-    ViewBag.Title = "Создать новую папку";
-    Layout = "_Layout";
+ViewBag.Title = "Создать новую папку";
+Layout = "_Layout";
 }
 
 <div class="container">
-    <h2 class="text-center my-4 display-4">Создать новую папку</h2>
+    <h2 class="text-center my-4 display-4" style="color: #4B0082;">Создать новую папку</h2>
 
     <form asp-action="Create" method="post">
         <div class="form-group">
-            <label for="Text">Название папки</label>
-            <input type="text" class="form-control" id="Text" name="Text" required />
+            <label for="Text" style="color: #283C63; font-size: 1.2rem;">Название папки</label>
+            <input type="text" class="form-control" id="Text" name="Text" required style="border-radius: 10px; padding: 10px; font-size: 1rem; border: 2px solid #8EC5FC;" />
         </div>
         <div class="form-group">
-            <label for="ImageUrl">URL изображения (опционально)</label>
-            <input type="url" class="form-control" id="ImageUrl" name="ImageUrl" />
+            <label for="ImageUrl" style="color: #283C63; font-size: 1.2rem;">URL изображения (опционально)</label>
+            <input type="url" class="form-control" id="ImageUrl" name="ImageUrl" style="border-radius: 10px; padding: 10px; font-size: 1rem; border: 2px solid #8EC5FC;" />
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Создать папку</button>
+        <button type="submit" class="btn btn-lg create-folder-btn mt-3">Создать папку</button>
     </form>
 </div>
+
+<!-- Стили -->
+<style>
+    body {
+        background-color: #F8F9FA;
+        font-family: 'Nunito', sans-serif;
+    }
+
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+    }
+
+    h2 {
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 40px;
+    }
+
+    .form-control {
+        font-family: 'Nunito', sans-serif;
+        padding: 15px;
+        border-radius: 10px;
+        border: 2px solid #8EC5FC;
+    }
+
+    .btn-lg {
+        font-size: 1rem;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .create-folder-btn {
+        background-color: #8EC5FC;
+        color: white;
+        border: none;
+    }
+
+    .create-folder-btn:hover {
+        background-color: #4B0082;
+        color: white;
+    }
+
+    label {
+        color: #283C63;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+</style>

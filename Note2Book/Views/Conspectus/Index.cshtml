@@ -6,33 +6,35 @@ Layout = "_Layout";
 }
 
 <div class="container">
-    <h2 class="text-center my-4 display-4">Мои папки</h2>
+    <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Мои Папки</h2>
 
     <!-- Кнопка для создания новой папки -->
     <div class="text-right mb-4">
-        <a href="@Url.Action("Create", "Conspectus")" class="btn btn-primary btn-lg" style="border-radius: 10px;">Создать новую папку</a>
+        <a href="@Url.Action("Create", "Conspectus")" class="btn btn-lg create-folder-btn">Создать новую папку</a>
     </div>
 
     <!-- Ряд карточек -->
     <div class="row justify-content-center">
         @foreach (var folder in Model)
         {
-        <div class="col-md-4 mb-4 d-flex align-items-stretch">
+        <div class="col-md-3 mb-4">
             <!-- Карточка с ховером и тенью -->
             <a href="@Url.Action("Index", "Note", new { folderId = folder.Id })" class="text-decoration-none">
-                <div class="card h-100 border-0 shadow-lg" style="transition: transform 0.3s, box-shadow 0.3s; border-radius: 20px;">
-                    <img class="card-img-top mx-auto mt-4" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 150px; width: 150px; object-fit: cover;">
+                <div class="card h-100 shadow-lg d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); width: 95%; height: 300px;">
+                    <img class="card-img-top mx-auto mt-3" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 120px; width: 120px; object-fit: cover;">
                     <div class="card-body text-center">
-                        <h5 class="card-title mt-3">@folder.Text</h5>
-                        <p class="card-text text-muted">
+                        <h5 class="card-title" style="color: #283C63; font-size: 1.25rem; font-weight: bold;">@folder.Text</h5>
+                        <p class="card-text" style="color: #555; font-size: 0.9rem;">
                             <strong>Дата создания:</strong> @folder.CreatedAt.ToString("dd MMM yyyy") <br />
                             <strong>Количество документов:</strong> @folder.Notes.Count
                         </p>
                     </div>
+                    <!-- Кнопка удаления папки внизу карточки -->
+                    <div class="card-footer text-center" style="background: transparent; border: none;">
+                        <button class="btn btn-lg delete-folder-btn" onclick="confirmDelete('@folder.Id')">Удалить папку</button>
+                    </div>
                 </div>
             </a>
-            <!-- Кнопка удаления папки -->
-            <button class="btn btn-danger btn-sm mt-2 mx-auto" onclick="confirmDelete('@folder.Id')">Удалить</button>
         </div>
         }
     </div>
@@ -49,21 +51,86 @@ Layout = "_Layout";
 
 <!-- Стили -->
 <style>
+    body {
+        background-color: #F8F9FA;
+        font-family: 'Nunito', sans-serif;
+    }
+
+    h2 {
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 40px;
+    }
+
+    .card {
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 15px;
+        width: 95%; /* Увеличена ширина */
+        height: 300px; /* Увеличена высота */
+    }
+
+    .card-footer {
+        margin-top: auto;
+        padding-top: 10px;
+        background: transparent;
+        border: none;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        margin-bottom: 10px;
+    }
+
+    .btn-lg {
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .create-folder-btn {
+        background-color: #8EC5FC;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        border: none;
+    }
+
+    .create-folder-btn:hover {
+        background-color: #4B0082;
+        color: white;
+    }
+
+    .delete-folder-btn {
+        background-color: #4B0082;
+        color: white;
+        border-radius: 10px;
+        border: none;
+    }
+
+    .delete-folder-btn:hover {
+        background-color: #7DB9E8;
+        color: white;
+    }
+
+    .card-img-top {
+        transition: transform 0.3s ease;
+        height: 120px; /* Увеличена высота изображения */
+        width: 120px;  /* Увеличена ширина изображения */
+    }
+
+    .card:hover .card-img-top {
+        transform: rotate(10deg);
+    }
+
     a:hover .card {
         transform: scale(1.05);
         box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
-    }
-    .card-title {
-        font-weight: bold;
-        font-size: 1.25rem;
-    }
-    .card:hover .card-title {
-        color: #007bff;
-    }
-    .card-img-top {
-        transition: transform 0.3s;
-    }
-    .card:hover .card-img-top {
-        transform: rotate(10deg);
     }
 </style>
