@@ -17,25 +17,27 @@ Layout = "_Layout";
     <div class="row justify-content-center">
         @foreach (var folder in Model)
         {
-        <div class="col-md-3 mb-4">
-            <!-- Карточка с ховером и тенью -->
-            <a href="@Url.Action("Index", "Note", new { folderId = folder.Id })" class="text-decoration-none">
+            <div class="col-md-3 mb-4">
+                <!-- Карточка с ховером и тенью -->
                 <div class="card h-100 shadow-lg d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); width: 95%; height: 300px;">
-                    <img class="card-img-top mx-auto mt-3" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 120px; width: 120px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <h5 class="card-title" style="color: #283C63; font-size: 1.25rem; font-weight: bold;">@folder.Text</h5>
-                        <p class="card-text" style="color: #555; font-size: 0.9rem;">
-                            <strong>Дата создания:</strong> @folder.CreatedAt.ToString("dd MMM yyyy") <br />
-                            <strong>Количество документов:</strong> @folder.Notes.Count
-                        </p>
-                    </div>
+                    <!-- Ссылка на верхнюю часть карточки -->
+                    <a href="@Url.Action("Index", "Note", new { folderId = folder.Id })" class="text-decoration-none" style="flex-grow: 1;">
+                        <div class="card-body text-center">
+                            <img class="card-img-top mx-auto mt-3" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 120px; width: 120px; object-fit: cover;">
+                            <h5 class="card-title" style="color: #283C63; font-size: 1.25rem; font-weight: bold;">@folder.Text</h5>
+                            <p class="card-text" style="color: #555; font-size: 0.9rem;">
+                                <strong>Дата создания:</strong> @folder.CreatedAt.ToString("dd MMM yyyy") <br />
+                                <strong>Количество документов:</strong> @folder.Notes.Count
+                            </p>
+                        </div>
+                    </a>
                     <!-- Кнопка удаления папки внизу карточки -->
                     <div class="card-footer text-center" style="background: transparent; border: none;">
                         <button class="btn btn-lg delete-folder-btn" onclick="confirmDelete('@folder.Id')">Удалить папку</button>
                     </div>
                 </div>
-            </a>
-        </div>
+            </div>
+
         }
     </div>
 </div>

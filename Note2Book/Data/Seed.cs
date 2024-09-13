@@ -16,17 +16,18 @@ public class Seed
     {
         if (await _context.Users.AnyAsync())
         {
-            _context.Books.RemoveRange(_context.Books);
-            _context.Users.RemoveRange(_context.Users);
-            _context.Chapters.RemoveRange(_context.Chapters);
-            _context.Favorites.RemoveRange(_context.Favorites);
-            _context.Folders.RemoveRange(_context.Folders);
-            _context.Genres.RemoveRange(_context.Genres);
-            _context.BookComments.RemoveRange(_context.BookComments);
-            _context.Notes.RemoveRange(_context.Notes);
-            _context.Authors.RemoveRange(_context.Authors);
+            // _context.Books.RemoveRange(_context.Books);
+            // _context.Users.RemoveRange(_context.Users);
+            // _context.Chapters.RemoveRange(_context.Chapters);
+            // _context.Favorites.RemoveRange(_context.Favorites);
+            // _context.Folders.RemoveRange(_context.Folders);
+            // _context.Genres.RemoveRange(_context.Genres);
+            // _context.BookComments.RemoveRange(_context.BookComments);
+            // _context.Notes.RemoveRange(_context.Notes);
+            // _context.Authors.RemoveRange(_context.Authors);
             
-            await _context.SaveChangesAsync();
+            // await _context.SaveChangesAsync();
+            return;
         }
 
 
@@ -575,6 +576,17 @@ public class Seed
             },
         };
         
+        var folder3 = new Folder
+        {
+            User = user1,
+            Text = "Симпотная, но не потная",
+            ImageUrl = "https://storage.cloud.google.com/test_yuri_buryy/photo_2024-09-13_22-23-19.jpg",
+            Notes = new List<Note>
+            {
+                note2,
+            },
+        };
+        
         await _context.AddRangeAsync(book1);
         await _context.AddRangeAsync(book2);
         await _context.AddRangeAsync(book3);
@@ -590,6 +602,7 @@ public class Seed
         
         await _context.AddRangeAsync(folder1);
         await _context.AddRangeAsync(folder2);
+        await _context.AddRangeAsync(folder3);
         
         await _context.AddRangeAsync(bookComment1);
         await _context.AddRangeAsync(bookComment2);

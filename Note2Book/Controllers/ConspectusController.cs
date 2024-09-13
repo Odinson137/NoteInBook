@@ -57,6 +57,7 @@ public class ConspectusController : Controller
             .ToListAsync();
         return View(folders);
     }
+    
     [HttpGet]
     [Route("Create")]
     public IActionResult Create()
@@ -87,7 +88,39 @@ public class ConspectusController : Controller
 
         return RedirectToAction("Index");
     }
-    [HttpGet("Delete/{id}")]
+    
+    // Метод для отображения страницы редактирования папки
+    [HttpGet("Edit")]
+    public async Task<IActionResult> Edit(int folderId)
+    {
+        var folder = await _context.Folders.FindAsync(folderId);
+        if (folder == null)
+        {
+            return NotFound();
+        }
+        return View(folder);
+    }
+
+    // Метод для обработки отправки формы редактирования
+    [HttpPost("Edit")]
+    public async Task<IActionResult> Edit(Folder updatedFolder)
+    {
+        var folder = await _context.Folders.FindAsync(updatedFolder.Id);
+        if (folder == null)
+        {
+            return NotFound();
+        }
+
+        folder.Text = updatedFolder.Text;
+        folder.ImageUrl = updatedFolder.ImageUrl;
+
+        _context.Folders.Update(folder);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index");
+    }
+    
+    [HttpGet("Delete/{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         var folder = await _context.Folders.FindAsync(id);

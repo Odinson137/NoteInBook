@@ -20,6 +20,12 @@ public class NoteController : Controller
 
     public async Task<IActionResult> Index(int folderId, string? search)
     {
+        var hasFolder = await _context.Folders.FindAsync(folderId);
+        if (hasFolder == null)
+        {
+            return RedirectToAction("Index", "Conspectus");
+        }
+        
         // Извлекаем userId из куки
         var userIdCookie = Request.Cookies["UserId"];
         if (userIdCookie == null)
@@ -57,6 +63,7 @@ public class NoteController : Controller
         
         ViewBag.FolderId = folderId;
         ViewBag.SearchQuery = search;
+        ViewBag.FolderName = hasFolder.Text;
         
         return View(folders);
     }
@@ -161,7 +168,7 @@ public class NoteController : Controller
         
     }
     
-    [HttpGet("Delete/{id}")]
+    [HttpGet("Delete/{id:int}")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var note = await _context.Notes.FindAsync(id);
