@@ -4,71 +4,152 @@
 ViewBag.Title = "Книги";
 Layout = "_Layout";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<h2 class="page-title">Список книг</h2>
+<div class="container">
+    <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Список книг</h2>
 
-<div class="book-grid">
-    @foreach (var book in Model)
-    {
-    <div class="book-card">
-        <h3>@book.Title</h3>
-        <img style="width: 200px;" class="image" src="@book.Image" alt="Изображение книги" />
-        <p>
-            @if (book.Description.Length > 300)
-            {
-                @book.Description.Substring(0, 300)<p>...</p>
-            }
-            else
-            {
-            @book.Description
-            }
-        </p>
-        <a href="@Url.Action("Book", "Book", new { id = book.Id })" class="btn btn-primary">Подробнее</a>
+    <!-- Форма поиска -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <form method="get" action="@Url.Action("Index", "Book")" class="input-group">
+                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control"
+                       placeholder="Поиск по названию, автору, жанру..." style="border-radius: 10px;">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-lg search-btn" style="margin-left: 15px;">Поиск</button>
+                </div>
+            </form>
+        </div>
     </div>
-    }
+
+    <!-- Вывод книг в виде карточек -->
+    <div class="row">
+        @foreach (var book in Model)
+        {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm" style="border-radius: 15px; transition: transform 0.3s ease; padding: 30px;">
+                <div class="position-relative">
+                    <img class="card-img-top" src="@book.Image" alt="Изображение книги"
+                         style="width: 100%; height: auto; max-height: 300px; object-fit: contain; padding: 10px; border-radius: 15px 15px 0 0;">
+
+                    <!-- Иконка сердечка -->
+                    <form method="post" action="@Url.Action("AddToFavorites", "Favorite")" class="position-absolute top-0 end-0 p-2">
+                        <input type="hidden" name="bookId" value="@book.Id" />
+                        <button type="submit" class="btn btn-heart" title="Добавить в избранное">
+                            <i class="fa fa-heart"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 1.3rem; font-weight: bold; color: #4B0082;">@book.Title</h5>
+                    <p class="card-text" style="font-size: 0.9rem; color: #555;">
+                        @if (book.Description.Length > 200)
+                        {
+                        @book.Description.Substring(0, 200)<span>...</span>
+                        }
+                        else
+                        {
+                        @book.Description
+                        }
+                    </p>
+                </div>
+                <div class="card-footer text-center" style="border-top: none; background-color: transparent;">
+                    <a href="@Url.Action("Book", "Book", new { id = book.Id })"
+                       class="btn btn-lg unified-btn">
+                        Подробнее
+                    </a>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
 </div>
 
+<!-- Стили -->
 <style>
-    .page-title {
+    .container {
+        max-width: 1200px;
+    }
+
+    h2 {
+        color: #4B0082;
+        font-weight: 700;
         text-align: center;
-        margin-bottom: 30px;
-        font-size: 2em;
+        margin-bottom: 40px;
     }
-    .book-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* Три колонки */
-        gap: 20px;
-    }
-    .book-card {
+
+    .card {
         border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        padding: 30px;
+        position: relative;
     }
-    .book-card h3 {
-        font-size: 1.5em;
-        margin-bottom: 10px;
+
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
     }
-    .book-card img {
-        display: block;
-        margin: 0 auto 10px;
-        height: 300px; /* Увеличение высоты изображения */
+
+    .card-img-top {
+        border-radius: 15px 15px 0 0;
     }
-    .book-card p {
-        font-size: 0.9em;
-        color: #555;
+
+    .btn-lg {
+        font-size: 1rem;
+        padding: 10px 30px;
     }
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        margin-top: 10px;
-        background-color: #007bff;
+
+    /* Стили для строки поиска */
+    .form-control {
+        padding: 12px;
+        font-size: 1.1rem;
+        border: 1px solid #4B0082;
+        border-radius: 10px;
+    }
+
+    .input-group .btn {
+        padding: 12px 20px;
+        background-color: #4B0082;
         color: white;
-        border-radius: 5px;
-        text-decoration: none;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: none;
     }
-    .btn:hover {
-        background-color: #0056b3;
+
+    .input-group .btn:hover {
+        background-color: #8EC5FC;
+        color: white;
+    }
+
+    /* Кнопка Подробнее с теми же стилями, что и кнопка Поиск */
+    .unified-btn {
+        padding: 12px 20px;
+        background-color: #4B0082;
+        color: white;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .unified-btn:hover {
+        background-color: #8EC5FC;
+        color: white;
+    }
+
+    /* Стили для кнопки сердечка */
+    .btn-heart {
+       
+        background-color: transparent;
+        border: none;
+        color: #FF4500;
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-heart:hover {
+        color: #E03A00;
     }
 </style>

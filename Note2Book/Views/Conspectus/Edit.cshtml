@@ -1,29 +1,90 @@
 ﻿@model Note2Book.Models.Folder
 
 @{
-    ViewBag.Title = "Редактирование папки";
-    Layout = "_Layout";
+ViewBag.Title = "Редактирование папки";
+Layout = "_Layout";
 }
 
 <div class="container">
-    <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Редактировать папку</h2>
+    <h2 class="text-center my-4 display-4" style="color: #4B0082;">Редактировать папку</h2>
 
-    <form asp-action="Edit"  asp-controller="Conspectus" method="post">
+    <form asp-action="Edit" asp-controller="Conspectus" method="post">
         <input asp-for="Id" type="hidden" value="@Model.Id" />
 
         <div class="form-group">
-            <label for="@Model.Text">Название папки</label>
-            <input asp-for="Text" type="text" class="form-control" value="@Model.Text" required />
+            <label for="Text" style="color: #283C63; font-size: 1.2rem;">Название папки</label>
+            <input asp-for="Text" type="text" class="form-control" style="border-radius: 10px; padding: 10px; font-size: 1rem; border: 2px solid #8EC5FC;" required />
             <span asp-validation-for="Text" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label for="@Model.ImageUrl">URL изображения папки</label>
-            <input asp-for="ImageUrl" type="text" class="form-control" value="@Model.ImageUrl" />
+            <label for="ImageUrl" style="color: #283C63; font-size: 1.2rem;">URL изображения папки</label>
+            <input asp-for="ImageUrl" type="text" class="form-control" style="border-radius: 10px; padding: 10px; font-size: 1rem; border: 2px solid #8EC5FC;" />
             <span asp-validation-for="ImageUrl" class="text-danger"></span>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-4">Сохранить изменения</button>
-        <a href="@Url.Action("Index")" class="btn btn-secondary mt-4">Отмена</a>
+        <button type="submit" class="btn btn-lg mt-3 edit-folder-btn">Сохранить изменения</button>
+        <a href="@Url.Action("Index")" class="btn btn-lg mt-3 cancel-btn">Отмена</a>
     </form>
 </div>
+
+<!-- Стили -->
+<style>
+    body {
+        background-color: #F8F9FA;
+        font-family: 'Nunito', sans-serif;
+    }
+
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+    }
+
+    h2 {
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 40px;
+    }
+
+    .form-control {
+        font-family: 'Nunito', sans-serif;
+        padding: 15px;
+        border-radius: 10px;
+        border: 2px solid #8EC5FC;
+    }
+
+    .btn-lg {
+        font-size: 1rem;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .edit-folder-btn {
+        background-color: #8EC5FC;
+        color: white;
+        border: none;
+    }
+
+    .edit-folder-btn:hover {
+        background-color: #4B0082;
+        color: white;
+    }
+
+    .cancel-btn {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .cancel-btn:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    label {
+        color: #283C63;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+</style>

@@ -410,7 +410,7 @@ public class Seed
             {
                 genre5, genre2
             },
-            Image = "https://img4.labirint.ru/rc/a218953e8d9c0790b9db704b5d0a1172/363x561q80/books66/655706/cover.jpg?1686677638",
+            Image = "https://www.moscowbooks.ru/image/book/601/orig/i601785.jpg?cu=20180101000000",
             Chapters = new List<Chapter>
             {
                 chapter7, chapter8, chapter9, chapter10

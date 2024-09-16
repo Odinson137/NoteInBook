@@ -1,0 +1,93 @@
+﻿@model Note2Book.ViewModels.ChapterViewModel
+
+<div class="chapter-reading">
+    <h2>@Model.Chapter.Title</h2>
+    <p>@Html.Raw(Model.PageText)</p>
+
+    <div class="navigation-buttons">
+        @if (Model.PreviousChapter != null)
+        {
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.PreviousChapter.Id, pageNumber = 1 })"
+           class="btn btn-secondary">Предыдущая глава</a>
+        }
+
+        @if (Model.CurrentPage > 1)
+        {
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.Chapter.Id, pageNumber = Model.CurrentPage - 1 })"
+           class="btn btn-primary">Предыдущая страница</a>
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.Chapter.Id, pageNumber = Model.CurrentPage + 1 })"
+           class="btn btn-primary">Следующая страница</a>
+        }
+
+        @if (Model.NextChapter != null)
+        {
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.NextChapter.Id, pageNumber = 1 })"
+           class="btn btn-success">Следующая глава</a>
+        }
+
+        <a href="@Url.Action("Book", "Book", new { id = Model.Chapter.Book.Id })" class="btn btn-info">Вернуться к книге</a>
+    </div>
+</div>
+
+<style>
+    .chapter-reading {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .navigation-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .navigation-buttons a {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 5px;
+        text-decoration: none;
+        border-radius: 5px;
+        color: white;
+    }
+
+    .btn-primary {
+        background-color: #4B0082;
+    }
+
+    .btn-primary:hover {
+        background-color: #3A006F;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+</style>

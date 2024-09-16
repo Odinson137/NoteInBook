@@ -1,78 +1,191 @@
 ﻿@model Note2Book.Models.Book
 
-@{ }
+<div class="book-container">
+    <div class="book-details">
+        <div class="book-header">
+            <div class="book-image-container">
+                <img src="@Model.Image" alt="Обложка книги" class="book-image"/>
 
-<div class="book-details">
-    <div class="book-header">
-        <h1>@Model.Title</h1>
-        <img src="@Model.Image" alt="Обложка книги" class="book-image" style="width: 300px;"/>
-    </div>
+                <!-- Кнопки для скачивания под картинкой -->
+                <div class="download-buttons">
+                    <a href="@Url.Action("Download", "Book", new { id = Model.Id, format = "pdf" })" class="btn btn-download">Скачать PDF</a>
+                    <a href="@Url.Action("Download", "Book", new { id = Model.Id, format = "epub" })" class="btn btn-download">Скачать EPUB</a>
+                    <a href="@Url.Action("Download", "Book", new { id = Model.Id, format = "docx" })" class="btn btn-download">Скачать DOCX</a>
+                </div>
+            </div>
 
-    <div class="book-info">
-        <h3>Описание</h3>
-        <p>@Model.Description</p>
+            <div class="book-info">
+                <h1>@Model.Title</h1>
+                <h3>Описание</h3>
+                <p>@Model.Description</p>
 
-        <h4>Автор</h4>
-        <p>@Model.Author.Name @Model.Author.LastName</p>
+                <h4>Автор</h4>
+                <p>@Model.Author.Name @Model.Author.LastName</p>
 
-        <h4>Жанры</h4>
-        <ul>
-            @if (Model.Genres.Any())
-            {
-                @foreach (var genre in Model.Genres)
-                {
+                <h4>Жанры</h4>
+                <ul>
+                    @if (Model.Genres.Any())
+                    {
+                    @foreach (var genre in Model.Genres)
+                    {
                     <li>@genre.Title</li>
-                }          
-            }
-        </ul>
+                    }
+                    }
+                </ul>
 
-        <h4>Главы</h4>
-        <ul>
-            @if (Model.Chapters.Any())
-            {
-                @foreach (var chapter in Model.Chapters)
-                {
-                    <li>@chapter.Title</li>
-                }
-            }
-        </ul>
+                <h4>Главы</h4>
+                <div class="chapters">
+                    @if (Model.Chapters.Any())
+                    {
+                    @foreach (var chapter in Model.Chapters)
+                    {
+                    <div class="chapter-item">
+                        <span>@chapter.Title</span>
+                        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = chapter.Id, pageNumber = 1 })"
+                           class="btn btn-primary">Читать</a>
+                    </div>
+                    }
+                    }
+                </div>
 
-        <h5>Дата создания: @Model?.CreateAt.ToShortDateString()</h5>
+                <h5>Дата создания: @Model?.CreateAt.ToShortDateString()</h5>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
-    .book-details {
+    body {
+        background-color: #F0F4F8;
+        font-family: 'Nunito', sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .book-container {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 20px;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .book-details {
+        width: 100%;
+        max-width: 1200px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 40px; /* Увеличен padding для всего блока */
     }
 
     .book-header {
-        text-align: center;
-        margin-bottom: 20px;
+        width: 100%;
+        margin-bottom: 40px; /* Увеличено расстояние внизу блока */
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .book-image-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 40px; /* Увеличен отступ между изображением и текстом */
     }
 
     .book-image {
+        width: 250px;
+        height: auto;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px; /* Добавлен отступ снизу от картинки */
+    }
+
+    .download-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 20px; /* Увеличено расстояние между кнопками */
+        margin-top: 20px; /* Увеличен отступ сверху для кнопок */
+        width: 100%;
+    }
+
+    .btn-download {
+        background-color: #FF4500;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-download:hover {
+        background-color: #E03A00;
+        transform: scale(1.05);
     }
 
     .book-info {
-        width: 80%;
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        width: auto;
     }
 
-    h3, h4, h5 {
-        margin-top: 10px;
+    .book-info h1 {
+        color: #4B0082;
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
     }
 
-    ul {
+    .book-info h3, .book-info h4, .book-info h5 {
+        color: #4B0082;
+        margin-top: 20px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .book-info ul {
         list-style: disc;
         margin-left: 20px;
+    }
+
+    .chapters {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .chapter-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .chapter-item span {
+        flex: 1;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    .btn-primary {
+        background-color: #4B0082;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary:hover {
+        background-color: #6a0dad;
+        transform: scale(1.05);
     }
 </style>
