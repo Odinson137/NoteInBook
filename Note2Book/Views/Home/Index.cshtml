@@ -1,7 +1,97 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h2>Избранные книги</h2>
+    <div class="favorite-slider">
+        <!-- Книги будут динамически загружены сюда -->
+    </div>
 </div>
+
+<!-- Подключаем jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Подключаем стили и скрипты Slick Slider -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Получаем список избранных книг через AJAX
+        $.ajax({
+            url: '@Url.Action("GetFavoriteBooks", "Favorite")',
+            type: 'GET',
+            success: function (books) {
+                if (books.length > 0) {
+                    // Для каждой книги добавляем разметку слайдера
+                    books.forEach(function (book) {
+                        $('.favorite-slider').append(`
+                            <div class="slider-item">
+                                <img src="${book.image}" alt="${book.title}" style="width: 150px; height: 200px;">
+                                <h5>${book.title}</h5>
+                                <p>${book.author.lastName} ${book.author.name}</p>
+                            </div>
+                        `);
+                    });
+
+                    // Инициализируем слайдер после добавления всех книг
+                    initializeSlick();
+                } else {
+                    $('.favorite-slider').append('<p>У вас нет избранных книг.</p>');
+                }
+            },
+            error: function () {
+                alert("Не удалось загрузить список избранных книг.");
+            }
+        });
+
+        // Функция для инициализации слайдера
+        function initializeSlick() {
+            $('.favorite-slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 2000,
+                arrows: true
+            });
+        }
+    });
+</script>
+
+<style>
+    .favorite-slider {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .slider-item {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .slider-item img {
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .slider-item h5 {
+        font-size: 1.2rem;
+        color: #4B0082;
+    }
+
+    .slider-item p {
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    /* Slick Slider */
+    .slick-prev:before,
+    .slick-next:before {
+        color: #4B0082; /* Стрелки слайдера */
+    }
+</style>

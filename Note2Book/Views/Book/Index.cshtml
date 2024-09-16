@@ -1,8 +1,9 @@
-﻿@model System.Collections.Generic.List<Note2Book.Models.Book>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model System.Collections.Generic.List<Note2Book.ViewModels.BookViewModel>
 
 @{
-ViewBag.Title = "Книги";
-Layout = "_Layout";
+    ViewBag.Title = "Книги";
+    Layout = "_Layout";
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -32,24 +33,36 @@ Layout = "_Layout";
                     <img class="card-img-top" src="@book.Image" alt="Изображение книги"
                          style="width: 100%; height: auto; max-height: 300px; object-fit: contain; padding: 10px; border-radius: 15px 15px 0 0;">
 
+                    <!-- Проверяем, авторизован ли пользователь -->
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
                     <!-- Иконка сердечка -->
-                    <form method="post" action="@Url.Action("AddToFavorites", "Favorite")" class="position-absolute top-0 end-0 p-2">
-                        <input type="hidden" name="bookId" value="@book.Id" />
-                        <button type="submit" class="btn btn-heart" title="Добавить в избранное">
-                            <i class="fa fa-heart"></i>
+                    <form method="post" class="position-absolute top-0 end-0 p-2 favorite-form" data-book-id="@book.Id">
+                        <button type="button" class="btn btn-heart" title="Добавить в избранное">
+                            @if (book.IsLiked)
+                            {
+                            <!-- Красное сердце -->
+                            <i class="fas fa-heart" style="color: red;"></i>
+                            }
+                            else
+                            {
+                            <!-- Серое сердце -->
+                            <i class="far fa-heart"></i>
+                            }
                         </button>
                     </form>
+                    }
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" style="font-size: 1.3rem; font-weight: bold; color: #4B0082;">@book.Title</h5>
                     <p class="card-text" style="font-size: 0.9rem; color: #555;">
                         @if (book.Description.Length > 200)
                         {
-                        @book.Description.Substring(0, 200)<span>...</span>
+                            @book.Description.Substring(0, 200)<span>...</span>
                         }
                         else
                         {
-                        @book.Description
+                            @book.Description
                         }
                     </p>
                 </div>
@@ -64,6 +77,49 @@ Layout = "_Layout";
         }
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Обработчик клика по кнопке "Добавить в избранное"
+        $('.favorite-form button').click(function () {
+            var form = $(this).closest('.favorite-form');
+            var bookId = form.data('book-id');
+            var heartIcon = $(this).find('i');  // Иконка сердечка
+
+            // Выполнение AJAX-запроса
+            $.ajax({
+                url: '@Url.Action("AddToFavorites", "Favorite")',  // URL к вашему методу
+                type: 'POST',
+                data: { bookId: bookId },  // Отправляем bookId
+                xhrFields: {
+                    withCredentials: true  // Обеспечиваем передачу сессионных данных
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Если иконка уже красная, делаем её серой (книга убрана из избранного)
+                        if (heartIcon.hasClass('fas')) {
+                            heartIcon.removeClass('fas').addClass('far');  // Меняем на пустое сердечко
+                            heartIcon.css('color', 'gray');  // Делаем серой
+                        }
+                        // Если иконка серая, делаем её красной (книга добавлена в избранное)
+                        else {
+                            heartIcon.removeClass('far').addClass('fas');  // Меняем на заполненное сердечко
+                            heartIcon.css('color', 'red');  // Делаем красной
+                        }
+                    } else {
+                        alert("Не удалось добавить книгу в избранное.");
+                    }
+                },
+                error: function () {
+                    alert("Произошла ошибка при добавлении книги в избранное.");
+                }
+            });
+        });
+    });
+</script>
+
 
 <!-- Стили -->
 <style>
