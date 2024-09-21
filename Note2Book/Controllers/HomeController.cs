@@ -16,6 +16,28 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        return View();
+        var userIdCookie = Request.Cookies["UserId"];
+        if (userIdCookie == null)
+        {
+            return Unauthorized();
+        }
+        var userId = int.Parse(userIdCookie);
+    
+        var favoriteBooks = await _context.Favorites
+            .Include(f => f.Book)
+            .ThenInclude(b => b.Author) 
+            .Where(f => f.User.Id == userId)
+            .Select(f => new BookViewModel
+            {
+                Title = f.Book.Title,
+                Image = f.Book.Image,
+                Author = f.Book.Author
+            }).ToListAsync();
+
+        var homeViewModel = new HomeViewModel
+        {
+            FavoriteBooks = favoriteBooks
+        };
+        return View(homeViewModel);
     }
 }

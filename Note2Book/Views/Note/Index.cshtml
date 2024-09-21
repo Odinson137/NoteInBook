@@ -11,9 +11,9 @@ Layout = "_Layout";
     <!-- Название папки и кнопка редактирования -->
     <div class="row mb-4">
         <div class="col-md-8 mx-auto d-flex justify-content-between align-items-center">
-            <h3 class="folder-title" style="color: #4B0082; font-size: 1.8rem; font-weight: bold;">
+            <a href="@Url.Action("Index", "Conspectus")" class="folder-title" style="color: #4B0082; font-size: 1.8rem; font-weight: bold; text-decoration: none;">
                 @ViewBag.FolderName
-            </h3>
+            </a>
             <a href="@Url.Action("Edit", "Conspectus", new { folderId = ViewBag.FolderId })" class="btn btn-lg edit-folder-btn">
                 Редактировать папку
             </a>

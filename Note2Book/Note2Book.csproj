@@ -16,4 +16,57 @@
       <PackageReference Include="MySql.Data" Version="9.0.0" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\.gitignore" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\bower.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\component.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\CONTRIBUTING.markdown" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\index.html" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\ISSUE_TEMPLATE.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\LICENSE" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\Makefile" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\package.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\README.markdown" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick.jquery.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\ajax-loader.gif" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\config.rb" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\fonts\slick.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\fonts\slick.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\fonts\slick.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\fonts\slick.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\slick-theme.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\slick-theme.less" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\slick-theme.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\slick.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\slick.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\slick.less" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\slick.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\slick-1.8.1\slick\slick.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\.gitignore" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\bower.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\component.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\CONTRIBUTING.markdown" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\index.html" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\ISSUE_TEMPLATE.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\LICENSE" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\Makefile" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\package.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\README.markdown" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick.jquery.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\ajax-loader.gif" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\config.rb" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\fonts\slick.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\fonts\slick.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\fonts\slick.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\fonts\slick.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick-theme.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick-theme.less" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick-theme.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick.less" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick.scss" />
+    </ItemGroup>
 </Project>
