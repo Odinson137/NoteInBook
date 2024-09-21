@@ -10,7 +10,7 @@ ViewData["Title"] = "Home Page";
 </div>
 
 <!-- Подключаем jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/jquery.min.js"></script>
 
 <!-- Подключаем стили и скрипты Slick Slider -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
@@ -19,12 +19,19 @@ ViewData["Title"] = "Home Page";
 
 <script>
     $(document).ready(function () {
+        console.log('Документ готов, запускаем AJAX запрос на получение избранных книг');
+
         // Получаем список избранных книг через AJAX
         $.ajax({
             url: '@Url.Action("GetFavoriteBooks", "Favorite")',
             type: 'GET',
             success: function (books) {
+                console.log('Успешно загружены книги: ', books);
+
                 if (books.length > 0) {
+                    // Очищаем слайдер перед добавлением новых книг
+                    $('.favorite-slider').empty();
+
                     // Для каждой книги добавляем разметку слайдера
                     books.forEach(function (book) {
                         $('.favorite-slider').append(`
@@ -49,6 +56,7 @@ ViewData["Title"] = "Home Page";
 
         // Функция для инициализации слайдера
         function initializeSlick() {
+            console.log('Инициализируем Slick Slider');
             $('.favorite-slider').slick({
                 dots: true,
                 infinite: true,
