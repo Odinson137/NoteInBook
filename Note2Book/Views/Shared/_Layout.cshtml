@@ -4,48 +4,188 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - NoteInBook</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Montserrat:wght@500&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/Note2Book.styles.css" asp-append-version="true"/>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(90deg, #6A0dad 0%, #9B59b6 100%);
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .container-fluid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .navbar-brand {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand span {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+            padding: 5px 12px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-nav {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+
+        .nav-item {
+            margin-left: 20px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #ffffff;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease, transform 0.3s;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .nav-link:hover {
+            color: #ffd700;
+            transform: scale(1.1);
+        }
+
+        .navbar-toggler {
+            background: transparent;
+            border: none;
+            width: 40px;
+            height: 30px;
+            position: relative;
+        }
+
+        .navbar-toggler:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .navbar-toggler-icon {
+            display: none;
+        }
+
+        .navbar-toggler:before,
+        .navbar-toggler:after,
+        .navbar-toggler div {
+            content: '';
+            display: block;
+            height: 4px;
+            width: 100%;
+            background-color: white;
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-toggler:before {
+            top: 0;
+        }
+
+        .navbar-toggler:after {
+            bottom: 0;
+        }
+
+        .navbar-toggler div {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        footer {
+            background-color: #6A0dad;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex-grow: 1;
+        }
+    </style>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Note2Book</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>NOTEINBOOK</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <div></div>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
+                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
                     </li>
-
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
-                    <!-- Раздел Conspectus отображается только для авторизованных пользователей -->
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Conspectus" asp-action="Index">Conspectus</a>
+                        <a class="nav-link" asp-area="" asp-controller="Conspectus" asp-action="Index">Conspectus</a>
                     </li>
-
-                    <!-- Кнопка выхода -->
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
+                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
                     </li>
                     }
                     else
                     {
-                    <!-- Кнопки регистрации и входа для неавторизованных пользователей -->
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Sign in</a>
+                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Register">Sign in</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Sign up</a>
+                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Login">Sign up</a>
                     </li>
                     }
                 </ul>
@@ -53,17 +193,19 @@
         </div>
     </nav>
 </header>
-<div class="container">
+
+<div class="container mt-5 pt-5">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
 </div>
 
-<footer class="border-top footer text-muted">
+<footer class="footer mt-auto">
     <div class="container">
-        &copy; 2024 - Note2Book - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2024 - NoteInBook - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
