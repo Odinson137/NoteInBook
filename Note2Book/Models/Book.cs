@@ -15,4 +15,7 @@ public class Book : BaseModel
     public List<Chapter> Chapters { get; set; } = [];
     
     public Author Author { get; set; }
+    
+    public List<BookComment> Comments { get; set; } = [];
+
 }

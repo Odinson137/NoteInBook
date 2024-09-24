@@ -7,4 +7,6 @@ public class BookComment : BaseModel
     public string Text { get; set; }
     
     public Book Book { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

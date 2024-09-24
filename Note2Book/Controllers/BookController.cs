@@ -91,7 +91,23 @@ public class BookController : Controller
                     Id = c.Author.Id,
                     Name = c.Author.Name,
                     LastName = c.Author.LastName,
-                }
+                },
+                
+                
+                Comments = c.Comments
+                .OrderByDescending(comment => comment.Id) 
+                .Select(comment => new BookComment
+                {
+                Id = comment.Id,
+                Text = comment.Text,
+                Author = new User
+                {
+                    Id = comment.Author.Id,
+                    Name = comment.Author.Name,
+                    Login = comment.Author.Login
+                },
+                CreatedAt = comment.CreatedAt 
+            }).ToList()
             })
             .FirstOrDefaultAsync();
         

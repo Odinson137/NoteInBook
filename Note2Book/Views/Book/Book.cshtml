@@ -49,6 +49,42 @@
                 </div>
 
                 <h5>Дата создания: @Model?.CreateAt.ToShortDateString()</h5>
+
+                <div class="book-container">
+                    <div class="book-details">
+                        <!-- Информация о книге и комментариях -->
+
+                        <!-- Форма для добавления комментария -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="comment-form">
+                                @Html.AntiForgeryToken() <!-- Вставляет CSRF-токен -->
+                                <h4>Оставить комментарий</h4>
+                                <textarea id="commentText" placeholder="Напишите ваш комментарий..." rows="4"></textarea>
+                                <button id="submitComment" class="btn btn-primary">Отправить</button>
+                            </div>
+                        }
+
+                        <div class="book-comments">
+                            <h4>Комментарии</h4>
+                            @if (Model.Comments.Any())
+                            {
+                            foreach (var comment in Model.Comments)
+                            {
+                            <div class="comment-item">
+                                <p><strong>@comment.Author.Name</strong> (@comment.CreatedAt.ToShortDateString()):</p>
+                                <p>@comment.Text</p>
+                            </div>
+                            }
+                            }
+                            else
+                            {
+                            <p>Комментариев пока нет.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -188,4 +224,80 @@
         background-color: #6a0dad;
         transform: scale(1.05);
     }
+
+    .book-comments {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 10px;
+    }
+
+    .comment-item {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .comment-item p {
+        margin: 5px 0;
+    }
+
+    .comment-form {
+        margin-top: 20px;
+    }
+
+    .comment-form textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    .comment-form button {
+        background-color: #4B0082;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .comment-form button:hover {
+        background-color: #6a0dad;
+    }
 </style>
+
+<script>
+    document.getElementById('submitComment').addEventListener('click', function () {
+        const commentText = document.getElementById('commentText').value;
+        const bookId = @Model.Id;
+        const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        if (commentText.trim() === "") {
+            alert("Комментарий не может быть пустым.");
+            return;
+        }
+
+        fetch('/Comment/AddComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken // Передаём токен CSRF в заголовках
+            },
+            body: JSON.stringify({ bookId: bookId, commentText: commentText })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    // Можно добавить обновление списка комментариев без перезагрузки
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка при добавлении комментария:', error);
+            });
+    });
+</script>

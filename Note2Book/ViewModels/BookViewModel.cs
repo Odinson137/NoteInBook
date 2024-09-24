@@ -16,6 +16,7 @@ public class BookViewModel : BaseViewModel
 
     public List<Chapter> Chapters { get; set; } = [];
     
+    public List<BookComment> Comments { get; set; } = [];
     public Author Author { get; set; }
     
     public bool IsLiked { get; set; }
