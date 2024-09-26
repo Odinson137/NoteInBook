@@ -83,7 +83,7 @@ public class BookController : Controller
                 Image = c.Image,
                 Chapters = c.Chapters.Select(x => new Chapter
                 {
-                    Id = x.Id, 
+                    Id = x.Id,
                     Title = x.Title
                 }).ToList(),
                 Author = new Author
@@ -92,22 +92,25 @@ public class BookController : Controller
                     Name = c.Author.Name,
                     LastName = c.Author.LastName,
                 },
-                
-                
+                Storages = c.Storages.Select(x => new Storage
+                {
+                    Url = x.Url,
+                    FileType = x.FileType,
+                }).ToList(),
                 Comments = c.Comments
-                .OrderByDescending(comment => comment.Id) 
-                .Select(comment => new BookComment
-                {
-                Id = comment.Id,
-                Text = comment.Text,
-                Author = new User
-                {
-                    Id = comment.Author.Id,
-                    Name = comment.Author.Name,
-                    Login = comment.Author.Login
-                },
-                CreatedAt = comment.CreatedAt 
-            }).ToList()
+                    .OrderByDescending(comment => comment.Id)
+                    .Select(comment => new BookComment
+                    {
+                        Id = comment.Id,
+                        Text = comment.Text,
+                        Author = new User
+                        {
+                            Id = comment.Author.Id,
+                            Name = comment.Author.Name,
+                            Login = comment.Author.Login
+                        },
+                        CreatedAt = comment.CreatedAt
+                    }).ToList()
             })
             .FirstOrDefaultAsync();
         

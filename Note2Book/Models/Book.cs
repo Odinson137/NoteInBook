@@ -17,5 +17,6 @@ public class Book : BaseModel
     public Author Author { get; set; }
     
     public List<BookComment> Comments { get; set; } = [];
-
+    
+    public List<Storage> Storages { get; set; } = [];
 }

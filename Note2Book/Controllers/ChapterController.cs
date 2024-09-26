@@ -28,7 +28,7 @@ namespace Note2Book.Controllers
                 return NotFound();
             }
 
-            const int pageSize = 750;
+            const int pageSize = 5000;
             var totalCharacters = chapter.Text.Length;
             var totalPages = (int)Math.Ceiling((double)totalCharacters / pageSize);
 

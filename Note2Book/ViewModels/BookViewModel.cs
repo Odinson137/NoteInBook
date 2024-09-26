@@ -20,4 +20,6 @@ public class BookViewModel : BaseViewModel
     public Author Author { get; set; }
     
     public bool IsLiked { get; set; }
+    
+    public List<Storage> Storages { get; set; } = [];
 }

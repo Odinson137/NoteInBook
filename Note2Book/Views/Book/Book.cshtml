@@ -6,11 +6,11 @@
             <div class="book-image-container">
                 <img src="@Model.Image" alt="Обложка книги" class="book-image"/>
 
-                <!-- Кнопки для скачивания под картинкой -->
                 <div class="download-buttons">
-                    <a href="@Url.Action("Download", "Book", new { id = Model.Id, format = "pdf" })" class="btn btn-download">Скачать PDF</a>
-                    <a href="@Url.Action("Download", "Book", new { id = Model.Id, format = "epub" })" class="btn btn-download">Скачать EPUB</a>
-                    <a href="@Url.Action("Download", "Book", new { id = Model.Id, format = "docx" })" class="btn btn-download">Скачать DOCX</a>
+                    @foreach (var file in Model.Storages)
+                    {
+                        <a href="/files/books/@file.Url" class="btn btn-download" download="@file.Url">Скачать @file.FileType.ToString()</a>
+                    }
                 </div>
             </div>
 
@@ -72,7 +72,7 @@
                             foreach (var comment in Model.Comments)
                             {
                             <div class="comment-item">
-                                <p><strong>@comment.Author.Name</strong> (@comment.CreatedAt.ToShortDateString()):</p>
+                                <p><strong>@comment.Author.Login</strong> (@comment.CreatedAt.ToShortDateString()):</p>
                                 <p>@comment.Text</p>
                             </div>
                             }
@@ -274,30 +274,26 @@
     document.getElementById('submitComment').addEventListener('click', function () {
         const commentText = document.getElementById('commentText').value;
         const bookId = @Model.Id;
-        const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
+        console.log(bookId);
 
         if (commentText.trim() === "") {
             alert("Комментарий не может быть пустым.");
             return;
         }
 
-        fetch('/Comment/AddComment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken // Передаём токен CSRF в заголовках
+        $.ajax({
+            url: '@Url.Action("AddComment", "Comment")',  // URL к вашему методу
+            type: 'POST',
+            data: { bookId: bookId, commentText: commentText },  // Отправляем bookId
+            xhrFields: {
+                withCredentials: true  // Обеспечиваем передачу сессионных данных
             },
-            body: JSON.stringify({ bookId: bookId, commentText: commentText })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                    // Можно добавить обновление списка комментариев без перезагрузки
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка при добавлении комментария:', error);
-            });
+            success: function (response) {
+                location.reload();
+            },
+            error: function () {
+                alert("Произошла ошибка при добавлении книги в избранное.");
+            }
+        });
     });
 </script>

@@ -19,7 +19,10 @@ public class HomeController : Controller
         var userIdCookie = Request.Cookies["UserId"];
         if (userIdCookie == null)
         {
-            return Unauthorized();
+            return View(new HomeViewModel
+            {
+                FavoriteBooks = []
+            });
         }
         var userId = int.Parse(userIdCookie);
     

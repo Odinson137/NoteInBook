@@ -35,4 +35,5 @@ public class DataContext : DbContext
     public DbSet<Folder> Folders { get; set; }
     public DbSet<Favorite> Favorites { get; set; }
     public DbSet<Author> Authors { get; set; }
+    public DbSet<Storage> Storages { get; set; }
 }

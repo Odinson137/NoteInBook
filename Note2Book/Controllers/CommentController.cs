@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Note2Book.Data;
 using Note2Book.Models;
-using System.Threading.Tasks;
 
 namespace Note2Book.Controllers
 {
@@ -17,7 +16,7 @@ namespace Note2Book.Controllers
 
         [Authorize]  // Только авторизованные пользователи могут добавлять комментарии
         [HttpPost]
-        public async Task<IActionResult> AddComment(Test test)
+        public async Task<IActionResult> AddComment(int bookId, string commentText)
         {
             var userIdCookie = Request.Cookies["UserId"];
             if (userIdCookie == null)
@@ -28,14 +27,12 @@ namespace Note2Book.Controllers
         
             // Преобразуем userId из строки в int (если используется int в базе данных)
             int userId = int.Parse(userIdCookie);
-            var book = await _context.Books.FindAsync(test.bookId);
-
-           
+            var book = await _context.Books.FindAsync(bookId);
 
             var newComment = new BookComment
             {
                 Author = _context.Users.Find(userId),
-                Text = test.commentText,
+                Text = commentText,
                 Book = book
             };
 
@@ -45,10 +42,4 @@ namespace Note2Book.Controllers
             return Ok(new { message = "Комментарий успешно добавлен" });
         }
     }
-}
-
-public class Test
-{
-    public int bookId { get; set; }
-    public string commentText { get; set; }
 }

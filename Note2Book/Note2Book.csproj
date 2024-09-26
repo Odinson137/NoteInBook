@@ -69,4 +69,8 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\slick-1.8.1\slick\slick.scss" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\files\seedFiles\" />
+    </ItemGroup>
 </Project>
