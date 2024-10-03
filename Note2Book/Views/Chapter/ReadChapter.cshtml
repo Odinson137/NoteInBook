@@ -1,8 +1,12 @@
 ﻿@model Note2Book.ViewModels.ChapterViewModel
 
 <div class="chapter-reading">
-    <h2>@Model.Chapter.Title</h2>
-    <p>@Html.Raw(Model.PageText)</p>
+    <div class="title-container">
+        <h2>@Model.Chapter.Title</h2>
+        <a href="@Url.Action("Book", "Book", new { id = Model.Chapter.Book.Id })" class="btn btn-info return-btn">Вернуться к книге</a>
+    </div>
+
+    <p class="chapter-text">@Html.Raw(Model.PageText)</p>
 
     <div class="navigation-buttons">
         @if (Model.PreviousChapter != null)
@@ -28,8 +32,6 @@
         <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.NextChapter.Id, pageNumber = 1 })"
            class="btn btn-success">Следующая глава</a>
         }
-
-        <a href="@Url.Action("Book", "Book", new { id = Model.Chapter.Book.Id })" class="btn btn-info">Вернуться к книге</a>
     </div>
 </div>
 
@@ -43,51 +45,106 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
+    .title-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .chapter-text {
+        text-align: justify;
+        line-height: 1.6;
+        font-size: 1.1em;
+        color: #333;
+    }
+
+    .return-btn {
+        padding: 8px 16px;
+        background-color: #6A5ACD; /* Фиолетовый */
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+        border: none; /* Убираем border-color */
+        outline: none;
+        box-shadow: none;
+    }
+
+    .return-btn:hover {
+        background-color: #483D8B; /* Темнее фиолетовый */
+        color: white; /* Цвет текста при наведении */
+    }
+
+    .return-btn:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
     .navigation-buttons {
         display: flex;
-        flex-direction: column;
-        align-items: center;
+        flex-wrap: wrap;
+        justify-content: space-between;
         margin-top: 20px;
+        gap: 10px;
     }
 
     .navigation-buttons a {
         display: inline-block;
-        padding: 10px 20px;
-        margin: 5px;
+        padding: 8px 16px;
         text-decoration: none;
         border-radius: 5px;
         color: white;
+        font-size: 0.9em;
+        text-align: center;
+        border: none; /* Убираем border-color */
+        outline: none;
+        box-shadow: none;
+    }
+
+    .navigation-buttons a:hover {
+        color: white; /* Цвет текста при наведении */
+    }
+
+    .navigation-buttons a:focus {
+        outline: none;
+        box-shadow: none;
     }
 
     .btn-primary {
-        background-color: #4B0082;
+        background-color: #4B0082; /* Индиго */
     }
 
     .btn-primary:hover {
-        background-color: #3A006F;
+        background-color: #3A006F; /* Темнее индиго */
+        color: white; /* Цвет текста при наведении */
     }
 
     .btn-success {
-        background-color: #28a745;
+        background-color: #6A5ACD; /* Фиолетовый */
     }
 
     .btn-success:hover {
-        background-color: #218838;
+        background-color: #483D8B; /* Темнее фиолетовый */
+        color: white; /* Цвет текста при наведении */
     }
 
     .btn-secondary {
-        background-color: #6c757d;
+        background-color: #808080; /* Серый */
     }
 
     .btn-secondary:hover {
-        background-color: #5a6268;
+        background-color: #696969; /* Темнее серый */
+        color: white; /* Цвет текста при наведении */
     }
 
     .btn-info {
-        background-color: #17a2b8;
+        background-color: #7B68EE; /* Светлее фиолетовый */
     }
 
     .btn-info:hover {
-        background-color: #138496;
+        background-color: #6A5ACD; /* Фиолетовый */
+        color: white; /* Цвет текста при наведении */
     }
 </style>
+
+
