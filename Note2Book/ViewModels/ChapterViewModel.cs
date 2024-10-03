@@ -8,7 +8,7 @@ namespace Note2Book.ViewModels
         public string PageText { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
-        public Chapter? NextChapter { get; set; }
-        public Chapter? PreviousChapter { get; set; }
+        public int? NextChapter { get; set; }
+        public int? PreviousChapter { get; set; }
     }
 }

@@ -43,11 +43,13 @@ namespace Note2Book.Controllers
             var nextChapter = _context.Chapters
                                       .Where(c => c.Book.Id == chapter.Book.Id && c.Number > chapter.Number)
                                       .OrderBy(c => c.Number)
+                                      .Select(c => c.Id)
                                       .FirstOrDefault();
 
             var previousChapter = _context.Chapters
                                            .Where(c => c.Book.Id == chapter.Book.Id && c.Number < chapter.Number)
                                            .OrderByDescending(c => c.Number)
+                                           .Select(c => c.Id)
                                            .FirstOrDefault();
 
             var model = new ChapterViewModel

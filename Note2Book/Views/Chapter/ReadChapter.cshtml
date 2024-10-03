@@ -6,12 +6,18 @@
         <a href="@Url.Action("Book", "Book", new { id = Model.Chapter.Book.Id })" class="btn btn-info return-btn">Вернуться к книге</a>
     </div>
 
-    <p class="chapter-text">@Html.Raw(Model.PageText)</p>
+    @if (Html.Raw(Model.PageText) != null)
+    {
+        @foreach (var text in Html.Raw(Model.PageText).ToString()!.Split("\n"))
+        {
+            <div class="chapter-text" style="margin-bottom: 10px">@text</div>
+        }
+    }
 
     <div class="navigation-buttons">
         @if (Model.PreviousChapter != null)
         {
-        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.PreviousChapter.Id, pageNumber = 1 })"
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.PreviousChapter, pageNumber = 1 })"
            class="btn btn-secondary">Предыдущая глава</a>
         }
 
@@ -29,7 +35,7 @@
 
         @if (Model.NextChapter != null)
         {
-        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.NextChapter.Id, pageNumber = 1 })"
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.NextChapter, pageNumber = 1 })"
            class="btn btn-success">Следующая глава</a>
         }
     </div>
