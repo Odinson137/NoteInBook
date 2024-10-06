@@ -36,4 +36,5 @@ public class DataContext : DbContext
     public DbSet<Favorite> Favorites { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<Storage> Storages { get; set; }
+    public DbSet<Citation> Citations { get; set; }
 }

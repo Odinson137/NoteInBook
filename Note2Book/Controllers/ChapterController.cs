@@ -20,8 +20,8 @@ namespace Note2Book.Controllers
         public IActionResult ReadChapter(int chapterId, int pageNumber = 1)
         {
             var chapter = _context.Chapters
-                                  .Include(c => c.Book)
-                                  .FirstOrDefault(c => c.Id == chapterId);
+                .Include(c => c.Book)
+                .FirstOrDefault(c => c.Id == chapterId);
 
             if (chapter == null)
             {
@@ -41,16 +41,30 @@ namespace Note2Book.Controllers
             var pageText = chapter.Text.Substring(startIndex, Math.Min(pageSize, totalCharacters - startIndex));
 
             var nextChapter = _context.Chapters
-                                      .Where(c => c.Book.Id == chapter.Book.Id && c.Number > chapter.Number)
-                                      .OrderBy(c => c.Number)
-                                      .Select(c => c.Id)
-                                      .FirstOrDefault();
+                .Where(c => c.Book.Id == chapter.Book.Id && c.Number > chapter.Number)
+                .OrderBy(c => c.Number)
+                .Select(c => c.Id)
+                .FirstOrDefault();
 
             var previousChapter = _context.Chapters
-                                           .Where(c => c.Book.Id == chapter.Book.Id && c.Number < chapter.Number)
-                                           .OrderByDescending(c => c.Number)
-                                           .Select(c => c.Id)
-                                           .FirstOrDefault();
+                .Where(c => c.Book.Id == chapter.Book.Id && c.Number < chapter.Number)
+                .OrderByDescending(c => c.Number)
+                .Select(c => c.Id)
+                .FirstOrDefault();
+
+            // Выбираем нужные поля для цитат и преобразуем в CitationViewModel
+            var citations = _context.Citations
+                .Where(c => c.Chapter.Id == chapterId &&
+                            c.Start >= startIndex &&
+                            c.End <= startIndex + pageSize)
+                .Select(c => new CitationViewModel
+                {
+                    Id = c.Id,
+                    Text = c.Text,
+                    Start = c.Start,
+                    End = c.End
+                })
+                .ToList();
 
             var model = new ChapterViewModel
             {
@@ -59,10 +73,13 @@ namespace Note2Book.Controllers
                 CurrentPage = pageNumber,
                 TotalPages = totalPages,
                 NextChapter = nextChapter,
-                PreviousChapter = previousChapter
+                PreviousChapter = previousChapter,
+                Citations = citations
             };
 
             return View(model);
         }
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿@model Note2Book.ViewModels.ChapterViewModel
+﻿@using Newtonsoft.Json
+@model Note2Book.ViewModels.ChapterViewModel
 
 <div class="chapter-reading">
     <div class="title-container">
@@ -6,12 +7,25 @@
         <a href="@Url.Action("Book", "Book", new { id = Model.Chapter.Book.Id })" class="btn btn-info return-btn">Вернуться к книге</a>
     </div>
 
-    @if (Html.Raw(Model.PageText) != null)
+    @if (!string.IsNullOrEmpty(Model.PageText))
     {
-        @foreach (var text in Html.Raw(Model.PageText).ToString()!.Split("\n"))
+    <div id="chapterContent">
+        <!-- Вставляем текст с цитатами -->
+        @{
+        var textWithQuotes = Model.PageText;
+        foreach (var quote in Model.Citations)
         {
-            <div class="chapter-text" style="margin-bottom: 10px">@text</div>
+        // Заменяем цитаты на кликабельные элементы
+        textWithQuotes = textWithQuotes.Replace(quote.Text,
+        $"<span class='highlighted-quote' data-quote-id='{quote.Id}' title='Нажмите, чтобы увидеть комментарий'>{quote.Text}</span>");
         }
+        }
+
+        <!-- Выводим измененный текст главы -->
+        <div class="chapter-text" style="margin-bottom: 10px;">
+            @Html.Raw(textWithQuotes)
+        </div>
+    </div>
     }
 
     <div class="navigation-buttons">
@@ -41,6 +55,120 @@
     </div>
 </div>
 
+<!-- Модальное окно для отображения комментария к цитате -->
+<div class="modal" id="commentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Комментарий к цитате</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="quoteComment"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для добавления новой цитаты -->
+<div class="modal" id="addQuoteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавить новую цитату</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="quoteText">Цитата:</label>
+                    <textarea id="quoteText" class="form-control"></textarea>
+                </div>
+                <div>
+                    <label for="quoteCommentInput">Комментарий:</label>
+                    <textarea id="quoteCommentInput" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="saveQuoteBtn">Сохранить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Обработчик клика по цитате
+        $('.highlighted-quote').click(function () {
+            var quoteId = $(this).data('quote-id');
+            var comment = '';
+
+            // Поиск комментария по ID цитаты
+            var citations = @(Html.Raw(JsonConvert.SerializeObject(Model.Citations)));
+            var selectedCitation = citations.find(c => c.Id == quoteId);
+
+            // Если комментарий найден
+            if (selectedCitation) {
+                comment = selectedCitation.Comment;
+            } else {
+                comment = 'Комментарий не найден';
+            }
+
+            // Отображаем комментарий в модальном окне
+            $('#quoteComment').text(comment);
+            $('#commentModal').modal('show');
+        });
+
+        // Обработчик выделения текста
+        $('#chapterContent').mouseup(function () {
+            var selectedText = window.getSelection().toString();
+            if (selectedText.length > 0) {
+                $('#addQuoteModal').modal('show');
+            }
+        });
+
+        // Обработчик сохранения новой цитаты
+        // Обработчик сохранения новой цитаты
+        $('#saveQuoteBtn').click(function () {
+            var quoteText = $('#quoteText').val();
+            var quoteComment = $('#quoteCommentInput').val();
+
+            // Здесь нужно будет добавить AJAX запрос для сохранения новой цитаты на сервер
+            // Пример AJAX запроса:
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("CreateQuote", "Quote")', // URL для сохранения новой цитаты
+                data: {
+                    text: quoteText,
+                    comment: quoteComment,
+                    chapterId: @Model.Chapter.Id // Укажите идентификатор главы
+                },
+                success: function (response) {
+                    // Обновите список цитат или выполните другие действия
+                    alert('Цитата добавлена успешно!');
+                    $('#addQuoteModal').modal('hide');
+                    $('#quoteText').val('');
+                    $('#quoteCommentInput').val('');
+                    // Вы можете обновить страницу или добавить новую цитату в текст
+                },
+                error: function () {
+                    alert('Произошла ошибка при добавлении цитаты.');
+                }
+            });
+        });
+    });
+</script>
+
+
 <style>
     .chapter-reading {
         max-width: 800px;
@@ -65,25 +193,28 @@
         color: #333;
     }
 
+    .highlighted-quote {
+        background-color: rgba(106, 90, 205, 0.3);
+        padding: 3px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .highlighted-quote:hover {
+        background-color: rgba(106, 90, 205, 0.5);
+    }
+
     .return-btn {
         padding: 8px 16px;
-        background-color: #6A5ACD; /* Фиолетовый */
+        background-color: #6A5ACD;
         border-radius: 5px;
         color: white;
         text-decoration: none;
-        border: none; /* Убираем border-color */
-        outline: none;
-        box-shadow: none;
     }
 
     .return-btn:hover {
-        background-color: #483D8B; /* Темнее фиолетовый */
-        color: white; /* Цвет текста при наведении */
-    }
-
-    .return-btn:focus {
-        outline: none;
-        box-shadow: none;
+        background-color: #483D8B;
+        color: white;
     }
 
     .navigation-buttons {
@@ -100,57 +231,37 @@
         text-decoration: none;
         border-radius: 5px;
         color: white;
-        font-size: 0.9em;
-        text-align: center;
-        border: none; /* Убираем border-color */
-        outline: none;
-        box-shadow: none;
-    }
-
-    .navigation-buttons a:hover {
-        color: white; /* Цвет текста при наведении */
-    }
-
-    .navigation-buttons a:focus {
-        outline: none;
-        box-shadow: none;
     }
 
     .btn-primary {
-        background-color: #4B0082; /* Индиго */
+        background-color: #4B0082;
     }
 
     .btn-primary:hover {
-        background-color: #3A006F; /* Темнее индиго */
-        color: white; /* Цвет текста при наведении */
+        background-color: #3A006F;
     }
 
     .btn-success {
-        background-color: #6A5ACD; /* Фиолетовый */
+        background-color: #6A5ACD;
     }
 
     .btn-success:hover {
-        background-color: #483D8B; /* Темнее фиолетовый */
-        color: white; /* Цвет текста при наведении */
+        background-color: #483D8B;
     }
 
     .btn-secondary {
-        background-color: #808080; /* Серый */
+        background-color: #808080;
     }
 
     .btn-secondary:hover {
-        background-color: #696969; /* Темнее серый */
-        color: white; /* Цвет текста при наведении */
+        background-color: #696969;
     }
 
     .btn-info {
-        background-color: #7B68EE; /* Светлее фиолетовый */
+        background-color: #7B68EE;
     }
 
     .btn-info:hover {
-        background-color: #6A5ACD; /* Фиолетовый */
-        color: white; /* Цвет текста при наведении */
+        background-color: #6A5ACD;
     }
 </style>
-
-

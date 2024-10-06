@@ -1,7 +1,7 @@
 ﻿@model Note2Book.ViewModels.HomeViewModel
 
 @{
-ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";
 }
 
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
@@ -53,6 +53,29 @@ ViewData["Title"] = "Home Page";
 </script>
 
 <style>
+    h2 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 2.5rem;
+        color: #6A0dad; /* Основной цвет вашего сайта */
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        position: relative;
+        display: inline-block;
+    }
+
+    h2::after {
+        content: '';
+        position: absolute;
+        width: 120%; /* Увеличена до 120% */
+        height: 4px;
+        background-color: #9B59b6; /* Второстепенный цвет */
+        bottom: -10px;
+        left: -10%; /* Сдвинута влево на 10% */
+        border-radius: 2px;
+    }
+
     .favorite-slider {
         width: 80%;
         margin: 0 auto;

@@ -34,7 +34,6 @@
         }
 
         .navbar-brand {
-           
             font-weight: 600;
             color: #ffffff;
             font-family: 'Montserrat', sans-serif;
@@ -48,6 +47,13 @@
             padding: 5px 12px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            transition: color 0.5s ease, transform 0.5s;
+        }
+
+        .navbar-brand span:hover {
+            color: #ffd700;
+            transform: scale(1.1);
         }
 
         .navbar-nav {
@@ -66,9 +72,11 @@
             font-size: 1.1rem;
             letter-spacing: 1px;
             text-transform: uppercase;
-            transition: color 0.3s ease, transform 0.3s;
+            text-decoration: none;
+            transition: color 0.5s ease, transform 0.5s;
             padding: 8px 12px;
             border-radius: 5px;
+            outline: none;
         }
 
         .nav-link:hover {

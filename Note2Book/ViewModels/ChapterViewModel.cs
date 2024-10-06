@@ -10,5 +10,7 @@ namespace Note2Book.ViewModels
         public int TotalPages { get; set; }
         public int? NextChapter { get; set; }
         public int? PreviousChapter { get; set; }
+
+        public List<CitationViewModel> Citations { get; set; }
     }
 }
