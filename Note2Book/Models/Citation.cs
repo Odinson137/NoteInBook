@@ -4,6 +4,8 @@ public class Citation: BaseModel
 {
     public string Text { get; set; }
     
+    public string Comment { get; set; }
+    
     public User Author { get; set; }
     
     public DateTime DateTime { get; set; } = DateTime.Now;

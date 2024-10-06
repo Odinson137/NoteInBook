@@ -61,6 +61,7 @@ namespace Note2Book.Controllers
                 {
                     Id = c.Id,
                     Text = c.Text,
+                    Comment = c.Comment,
                     Start = c.Start,
                     End = c.End
                 })

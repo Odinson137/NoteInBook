@@ -16,7 +16,7 @@ public class CitationController : Controller
   
 
     [HttpPost]
-    public async Task<IActionResult> Create(int chapterId, string text, int start, int end)
+    public async Task<IActionResult> Create(int chapterId, string text, int start, int end, string comment)
     {
         // Извлекаем userId из куки
         var userIdCookie = Request.Cookies["UserId"];
@@ -45,6 +45,7 @@ public class CitationController : Controller
         var newCitation = new Citation
         {
             Text = text,
+            Comment = comment,
             Start = start,
             End = end,
             Author = user,
@@ -56,6 +57,29 @@ public class CitationController : Controller
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "Цитата успешно добавлена" });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        // Извлекаем userId из куки
+        var userIdCookie = Request.Cookies["UserId"];
+        if (userIdCookie == null)
+        {
+            return Unauthorized("Пользователь не авторизован.");
+        }
+
+        var citation = _context.Citations.FirstOrDefault(c => c.Id == id);
+
+        if (citation == null)
+        {
+            return NotFound("Citation not found");
+        }
+
+        _context.Remove(citation);
+        await _context.SaveChangesAsync();
+        
+        return Ok();
     }
 
 }
