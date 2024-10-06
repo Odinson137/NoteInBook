@@ -10,20 +10,19 @@
     @if (!string.IsNullOrEmpty(Model.PageText))
     {
     <div id="chapterContent">
-        <!-- Вставляем текст с цитатами -->
+        @* Разбиваем текст на абзацы *@
         @{
-        var textWithQuotes = Model.PageText;
+        var textWithQuotes = Model.PageText.Replace("\n", "</p><p>");
         foreach (var quote in Model.Citations)
         {
         // Заменяем цитаты на кликабельные элементы
-        textWithQuotes = textWithQuotes.Replace(quote.Text,
-        $"<span class='highlighted-quote' data-quote-id='{quote.Id}' title='Нажмите, чтобы увидеть комментарий'>{quote.Text}</span>");
+        textWithQuotes = textWithQuotes.Replace(quote.Text, $"<span class='highlighted-quote' data-quote-id='{quote.Id}' title='Нажмите, чтобы увидеть комментарий'>{quote.Text}</span>");
         }
         }
 
-        <!-- Выводим измененный текст главы -->
+        <!-- Выводим измененный текст главы с разбиением на абзацы -->
         <div class="chapter-text" style="margin-bottom: 10px;">
-            @Html.Raw(textWithQuotes)
+            <p>@Html.Raw(textWithQuotes)</p>
         </div>
     </div>
     }
@@ -55,8 +54,39 @@
     </div>
 </div>
 
+<!-- Модальное окно для добавления новой цитаты -->
+<div class="modal" id="citationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Добавить цитату</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="citationText">Цитата:</label>
+                    <textarea id="citationText" class="form-control" readonly></textarea>
+                </div>
+                <div>
+                    <label for="citationNote">Комментарий:</label>
+                    <textarea id="citationNote" class="form-control"></textarea>
+                </div>
+                <input type="hidden" id="startPosition">
+                <input type="hidden" id="endPosition">
+                <input type="hidden" id="chapterId" value="@Model.Chapter.Id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="saveCitationBtn">Сохранить цитату</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Модальное окно для отображения комментария к цитате -->
-<div class="modal" id="commentModal" tabindex="-1" role="dialog">
+<div class="modal" id="quoteCommentModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -66,37 +96,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p id="quoteComment"></p>
+                <p id="quoteCommentText"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Модальное окно для добавления новой цитаты -->
-<div class="modal" id="addQuoteModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Добавить новую цитату</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <label for="quoteText">Цитата:</label>
-                    <textarea id="quoteText" class="form-control"></textarea>
-                </div>
-                <div>
-                    <label for="quoteCommentInput">Комментарий:</label>
-                    <textarea id="quoteCommentInput" class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="saveQuoteBtn">Сохранить</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
@@ -107,67 +109,71 @@
 
 <script>
     $(document).ready(function () {
-        // Обработчик клика по цитате
-        $('.highlighted-quote').click(function () {
-            var quoteId = $(this).data('quote-id');
-            var comment = '';
-
-            // Поиск комментария по ID цитаты
-            var citations = @(Html.Raw(JsonConvert.SerializeObject(Model.Citations)));
-            var selectedCitation = citations.find(c => c.Id == quoteId);
-
-            // Если комментарий найден
-            if (selectedCitation) {
-                comment = selectedCitation.Comment;
-            } else {
-                comment = 'Комментарий не найден';
-            }
-
-            // Отображаем комментарий в модальном окне
-            $('#quoteComment').text(comment);
-            $('#commentModal').modal('show');
-        });
-
-        // Обработчик выделения текста
-        $('#chapterContent').mouseup(function () {
-            var selectedText = window.getSelection().toString();
+        // Отслеживание выделения текста
+        $(".chapter-text").mouseup(function () {
+            var selectedText = window.getSelection().toString().trim();
             if (selectedText.length > 0) {
-                $('#addQuoteModal').modal('show');
+                var selection = window.getSelection();
+                var range = selection.getRangeAt(0);
+                var start = calculateStartOffset(range);
+                var end = calculateEndOffset(range);
+
+                // Открытие модального окна и заполнение полей
+                $('#citationText').val(selectedText);
+                $('#startPosition').val(start);
+                $('#endPosition').val(end);
+                $('#citationModal').modal('show');
             }
         });
 
-        // Обработчик сохранения новой цитаты
-        // Обработчик сохранения новой цитаты
-        $('#saveQuoteBtn').click(function () {
-            var quoteText = $('#quoteText').val();
-            var quoteComment = $('#quoteCommentInput').val();
+        // Функция для вычисления позиции начала выделенного текста относительно всего текста главы
+        function calculateStartOffset(range) {
+            var content = document.getElementById('chapterContent').innerText;
+            return content.indexOf(range.toString());
+        }
 
-            // Здесь нужно будет добавить AJAX запрос для сохранения новой цитаты на сервер
-            // Пример AJAX запроса:
+        // Функция для вычисления позиции конца выделенного текста относительно всего текста главы
+        function calculateEndOffset(range) {
+            var content = document.getElementById('chapterContent').innerText;
+            return content.indexOf(range.toString()) + range.toString().length;
+        }
+
+        // Отправка данных цитаты через AJAX
+        $('#saveCitationBtn').click(function () {
+            var citationData = {
+                Text: $('#citationNote').val(),
+                Start: $('#startPosition').val(),
+                End: $('#endPosition').val(),
+                ChapterId: $('#chapterId').val()
+            };
+
             $.ajax({
-                type: "POST",
-                url: '@Url.Action("CreateQuote", "Quote")', // URL для сохранения новой цитаты
-                data: {
-                    text: quoteText,
-                    comment: quoteComment,
-                    chapterId: @Model.Chapter.Id // Укажите идентификатор главы
-                },
+                url: '@Url.Action("Create", "Citation")',
+                method: 'POST',
+                data: citationData,
                 success: function (response) {
-                    // Обновите список цитат или выполните другие действия
-                    alert('Цитата добавлена успешно!');
-                    $('#addQuoteModal').modal('hide');
-                    $('#quoteText').val('');
-                    $('#quoteCommentInput').val('');
-                    // Вы можете обновить страницу или добавить новую цитату в текст
+                    $('#citationModal').modal('hide');
+                    alert('Цитата успешно добавлена!');
                 },
-                error: function () {
+                error: function (xhr, status, error) {
                     alert('Произошла ошибка при добавлении цитаты.');
                 }
             });
         });
+
+        // Обработка кликов по цитатам
+        $('.highlighted-quote').click(function () {
+            var quoteId = $(this).data('quote-id');
+            var citation = @Html.Raw(JsonConvert.SerializeObject(Model.Citations));
+            var selectedCitation = citation.find(c => c.Id == quoteId);
+
+            if (selectedCitation) {
+                $('#quoteCommentText').text(selectedCitation.Comment);
+                $('#quoteCommentModal').modal('show');
+            }
+        });
     });
 </script>
-
 
 <style>
     .chapter-reading {
@@ -191,17 +197,6 @@
         line-height: 1.6;
         font-size: 1.1em;
         color: #333;
-    }
-
-    .highlighted-quote {
-        background-color: rgba(106, 90, 205, 0.3);
-        padding: 3px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .highlighted-quote:hover {
-        background-color: rgba(106, 90, 205, 0.5);
     }
 
     .return-btn {
@@ -230,38 +225,34 @@
         padding: 8px 16px;
         text-decoration: none;
         border-radius: 5px;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
         color: white;
     }
 
     .btn-primary {
-        background-color: #4B0082;
-    }
-
-    .btn-primary:hover {
-        background-color: #3A006F;
+        background-color: #007bff;
+        color: white;
     }
 
     .btn-success {
-        background-color: #6A5ACD;
-    }
-
-    .btn-success:hover {
-        background-color: #483D8B;
-    }
-
-    .btn-secondary {
-        background-color: #808080;
-    }
-
-    .btn-secondary:hover {
-        background-color: #696969;
+        background-color: #28a745;
+        color: white;
     }
 
     .btn-info {
-        background-color: #7B68EE;
+        background-color: #17a2b8;
+        color: white;
     }
 
-    .btn-info:hover {
-        background-color: #6A5ACD;
+    .highlighted-quote {
+        background-color: yellow;
+        cursor: pointer;
+    }
+
+    .highlighted-quote:hover {
+        background-color: lightyellow;
     }
 </style>
