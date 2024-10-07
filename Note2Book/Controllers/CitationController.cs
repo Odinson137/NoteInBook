@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
 using Note2Book.Models;
@@ -18,8 +19,7 @@ public class CitationController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(int chapterId, string text, int start, int end, string comment)
     {
-        // Извлекаем userId из куки
-        var userIdCookie = Request.Cookies["UserId"];
+        var userIdCookie = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdCookie == null)
         {
             return Unauthorized("Пользователь не авторизован.");
@@ -62,8 +62,7 @@ public class CitationController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        // Извлекаем userId из куки
-        var userIdCookie = Request.Cookies["UserId"];
+        var userIdCookie = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdCookie == null)
         {
             return Unauthorized("Пользователь не авторизован.");

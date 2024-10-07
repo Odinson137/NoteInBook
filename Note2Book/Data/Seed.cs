@@ -441,7 +441,7 @@ public class Seed
             {
                 genre5, genre3, genre1
             },
-            Image = "https://avatars.mds.yandex.net/i?id=78aaa629bf3c7498d226fbad165ddd95_l-5233066-images-thumbs&n=13",
+            Image = "https://i.pinimg.com/736x/a2/3a/99/a23a990d2f8c2bec5834b2881569707b.jpg",
             Chapters = new List<Chapter>
             {
                 chapter1, chapter2, chapter3

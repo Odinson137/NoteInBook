@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -69,7 +70,7 @@ public class ConspectusController : Controller
     [Route("Create")]
     public async Task<IActionResult> Create(Folder model)
     {
-        var userIdCookie = Request.Cookies["UserId"];
+        var userIdCookie = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdCookie == null) return RedirectToAction("Login", "User");
 
         int userId = int.Parse(userIdCookie);

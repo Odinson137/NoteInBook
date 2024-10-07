@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
@@ -16,7 +17,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var userIdCookie = Request.Cookies["UserId"];
+        var userIdCookie = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdCookie == null)
         {
             return View(new HomeViewModel

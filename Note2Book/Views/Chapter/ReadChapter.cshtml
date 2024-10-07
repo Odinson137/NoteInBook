@@ -170,7 +170,13 @@
                     location.reload();
                 },
                 error: function (xhr, status, error) {
-                    alert('Произошла ошибка при добавлении цитаты.');
+                    if (error === "Unauthorized") 
+                    {
+                        alert('Пользователь должен быть авторизован. Так сказала моя зая - киса');
+                    } else 
+                    {
+                        alert('Произошла ошибка при добавлении цитаты.');
+                    }
                 }
             });
         });
@@ -231,7 +237,7 @@
     }
 
     .btn-info.return-btn {
-        background-color: #4B0082;
+        background-color: #6A5ACD;
         border: none; 
         color: white;
         text-decoration: none;
@@ -241,7 +247,7 @@
     }
 
     .btn-info.return-btn:hover {
-        background-color: #31b0d5;
+        background-color: #4B0082;;
     }
 
     .highlighted-quote {

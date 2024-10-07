@@ -4,6 +4,7 @@ using Note2Book.Models;
 using Note2Book.ViewModels;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using Note2Book.Data;
 
 namespace Note2Book.Controllers
@@ -52,20 +53,27 @@ namespace Note2Book.Controllers
                 .Select(c => c.Id)
                 .FirstOrDefault();
 
-            // Выбираем нужные поля для цитат и преобразуем в CitationViewModel
-            var citations = _context.Citations
-                .Where(c => c.Chapter.Id == chapterId &&
-                            c.Start >= startIndex &&
-                            c.End <= startIndex + pageSize)
-                .Select(c => new CitationViewModel
-                {
-                    Id = c.Id,
-                    Text = c.Text,
-                    Comment = c.Comment,
-                    Start = c.Start,
-                    End = c.End
-                })
-                .ToList();
+            var citations = new List<CitationViewModel>();
+            var userIdCookie = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userIdCookie != null)
+            {
+                var userId = int.Parse(userIdCookie);
+            
+                citations = _context.Citations
+                    .Where(c => c.Author.Id == userId)
+                    .Where(c => c.Chapter.Id == chapterId &&
+                                c.Start >= startIndex &&
+                                c.End <= startIndex + pageSize)
+                    .Select(c => new CitationViewModel
+                    {
+                        Id = c.Id,
+                        Text = c.Text,
+                        Comment = c.Comment,
+                        Start = c.Start,
+                        End = c.End
+                    })
+                    .ToList();
+            }
 
             var model = new ChapterViewModel
             {

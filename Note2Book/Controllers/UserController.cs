@@ -55,8 +55,8 @@ public class UserController : Controller
         // Успешная аутентификация, создание куки
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.Name),
-            new Claim(ClaimTypes.NameIdentifier, user.Login)
+            new(ClaimTypes.Name, user.Name),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
     
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -96,8 +96,6 @@ public class UserController : Controller
         
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-        
-        
 
         return RedirectToAction("Index", "Home");
     }
