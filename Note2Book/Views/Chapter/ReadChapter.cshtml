@@ -28,8 +28,29 @@
     }
 
     <div class="navigation-buttons">
-        @* Навигация по главам и страницам *@
-        @* Код навигации остаётся без изменений *@
+        @if (Model.PreviousChapter != null)
+        {
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.PreviousChapter, pageNumber = 1 })"
+           class="btn btn-secondary">Предыдущая глава</a>
+        }
+
+        @if (Model.CurrentPage > 1)
+        {
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.Chapter.Id, pageNumber = Model.CurrentPage - 1 })"
+           class="btn btn-primary">Предыдущая страница</a>
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.Chapter.Id, pageNumber = Model.CurrentPage + 1 })"
+           class="btn btn-primary">Следующая страница</a>
+        }
+
+        @if (Model.NextChapter != null)
+        {
+        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = Model.NextChapter, pageNumber = 1 })"
+           class="btn btn-success">Следующая глава</a>
+        }
     </div>
 </div>
 
@@ -184,6 +205,11 @@
             });
         });
     });
+    // Закрытие модального окна
+    $('.close, .btn-secondary').click(function () {
+        $(this).closest('.modal').modal('hide');
+    });
+
 </script>
 
 <style>
@@ -191,9 +217,31 @@
         max-width: 800px;
         margin: 0 auto;
         padding: 20px;
-        background-color: #f9f9f9;
+        background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: justify;
+    }
+
+    .title-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-info.return-btn {
+        background-color: #4B0082;
+        border: none; 
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-info.return-btn:hover {
+        background-color: #31b0d5;
     }
 
     .highlighted-quote {
@@ -208,13 +256,150 @@
         background-color: rgba(138, 43, 226, 0.5);
     }
 
-    .modal-footer .btn {
-        margin-left: 10px;
+    
+
+    #quoteCommentModal .modal-body {
+        padding: 20px;
     }
 
-    .navigation-buttons {
-        margin-top: 20px;
+    #quoteCommentModal .modal-footer {
         display: flex;
         justify-content: space-between;
     }
+
+    #quoteCommentModal .btn-danger {
+        background-color: #d9534f;
+        border-color: #d43f3a;
+    }
+
+    #quoteCommentModal .btn-danger:hover {
+        background-color: #c9302c;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .btn-primary {
+        background-color: #4B0082; /* Индиго */
+        border: none;
+        
+    }
+
+    .btn-primary:hover {
+        background-color: #3A006F; /* Темнее индиго */
+        color: white; /* Цвет текста при наведении */
+    }
+
+    .btn-success {
+        background-color: #6A5ACD; /* Фиолетовый */
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #483D8B; /* Темнее фиолетовый */
+        color: white; /* Цвет текста при наведении */
+    }
+
+    .btn-secondary {
+        background-color: #808080; /* Серый */
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #696969; /* Темнее серый */
+        color: white; /* Цвет текста при наведении */
+    }
+
+    /* Общие стили для модальных окон */
+    .modal-content {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        background-color: #6c757d;
+        color: #fff;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .modal-title {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.25rem;
+    }
+
+    .modal-body label {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .modal-body textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        font-family: 'Roboto', sans-serif;
+        font-size: 1rem;
+        resize: none;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #dee2e6;
+        padding: 10px;
+    }
+
+    .modal-footer .btn {
+        border-radius: 5px;
+        font-family: 'Roboto', sans-serif;
+        padding: 8px 15px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .modal-footer .btn-primary {
+        background-color: #8a2be2;
+        border: none;
+    }
+
+    .modal-footer .btn-primary:hover {
+        background-color: #6a1bbd;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+    }
+
+    .modal-footer .btn-secondary:hover {
+        background-color: #545b62;
+    }
+
+    .modal-footer .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .modal-footer .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    /* Стили для кнопки закрытия модального окна */
+    .close {
+        background-color: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: #fff;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+    .close:hover {
+        color: #f8f9fa;
+    }
+
 </style>
+
