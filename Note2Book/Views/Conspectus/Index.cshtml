@@ -1,9 +1,16 @@
-﻿@model System.Collections.Generic.List<Note2Book.Models.Folder>
+﻿@model Note2Book.ViewModels.ConspectusViewModel
 
 @{
-ViewBag.Title = "Список папок";
-Layout = "_Layout";
+    ViewBag.Title = "Список папок";
+    Layout = "_Layout";
 }
+
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <div class="container">
     <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Мои Папки</h2>
@@ -13,33 +20,59 @@ Layout = "_Layout";
         <a href="@Url.Action("Create", "Conspectus")" class="btn btn-lg create-folder-btn">Создать новую папку</a>
     </div>
 
-    <!-- Ряд карточек -->
-    <div class="row justify-content-center">
-        @foreach (var folder in Model)
-        {
-        <div class="col-md-3 mb-4">
-            <!-- Карточка с ховером и тенью -->
-            <div class="card h-100 shadow-lg d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); width: 95%; height: 300px;">
-                <!-- Ссылка на верхнюю часть карточки -->
-                <a href="@Url.Action("Index", "Note", new { folderId = folder.Id })" class="text-decoration-none" style="flex-grow: 1;">
-                    <div class="card-body text-center">
-                        <img class="card-img-top mx-auto mt-3" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 120px; width: 120px; object-fit: cover;">
-                        <h5 class="card-title" style="color: #283C63; font-size: 1.25rem; font-weight: bold;">@folder.Text</h5>
-                        <p class="card-text" style="color: #555; font-size: 0.9rem;">
-                            <strong>Дата создания:</strong> @folder.CreatedAt.ToString("dd MMM yyyy") <br />
-                            <strong>Количество документов:</strong> @folder.Notes.Count
-                        </p>
+    <!-- Слайдер для папок -->
+    @if (Model.Folders != null)
+    {
+        <div class="folder-slider">
+            @foreach (var folder in Model.Folders)
+            {
+                <div class="slider-item">
+                    <!-- Карточка с ховером и тенью -->
+                    <div class="card h-100 d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); width: 95%; height: 400px;">
+                        <!-- Ссылка на верхнюю часть карточки -->
+                        <a href="@Url.Action("Index", "Note", new { folderId = folder.Id })" class="text-decoration-none" style="flex-grow: 1;">
+                            <div class="card-body text-center">
+                                <img class="card-img-top mx-auto mt-3" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 120px; width: 120px; object-fit: cover; margin-bottom: 30px">
+                                <h5 class="card-title" style="color: #283C63; font-size: 1.25rem; font-weight: bold;">@folder.Text</h5>
+                                <p class="card-text" style="color: #555; font-size: 0.9rem;">
+                                    <strong>Дата создания:</strong> @folder.CreatedAt.ToString("dd MMM yyyy") <br/>
+                                    <strong>Количество документов:</strong> @folder.Notes.Count
+                                </p>
+                            </div>
+                        </a>
+                        <!-- Кнопка удаления папки внизу карточки -->
+                        <div class="card-footer text-center" style="background: transparent; border: none; margin-bottom: 15px">
+                            <button class="btn btn-lg delete-folder-btn" onclick="confirmDelete('@folder.Id')">Удалить папку</button>
+                        </div>
                     </div>
-                </a>
-                <!-- Кнопка удаления папки внизу карточки -->
-                <div class="card-footer text-center" style="background: transparent; border: none;">
-                    <button class="btn btn-lg delete-folder-btn" onclick="confirmDelete('@folder.Id')">Удалить папку</button>
                 </div>
-            </div>
+            }
         </div>
+    }
 
-        }
-    </div>
+    @if (Model.Books != null)
+    {
+        <div class="folder-slider">
+            @foreach (var bookGroup in Model.Books)
+            {
+                var book = bookGroup.Key; // Так как используется GroupBy, ключом будет объект книги
+                <div class="slider-item">
+                    <div class="card h-100 d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); width: 95%; height: 300px;">
+                        <a href="@Url.Action("List", "Note", new { bookId = book.Id })" class="text-decoration-none" style="flex-grow: 1;">
+                            <div class="card-body text-center">
+                                <img class="card-book-img-top mx-auto mt-3" src="@book.Image" alt="Image for @book.Title" style="height: 180px; width: 120px; object-fit: cover;">
+                                <h5 class="card-title" style="color: #283C63; font-size: 1.25rem; font-weight: bold;">@book.Title</h5>
+                                <p class="card-text" style="color: #555; font-size: 0.9rem;">
+                                    <strong>Количество цитат:</strong> @bookGroup.Count()
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
 </div>
 
 <!-- Скрипт для подтверждения удаления -->
@@ -49,6 +82,33 @@ Layout = "_Layout";
             window.location.href = '@Url.Action("Delete", "Conspectus")/' + folderId;
         }
     }
+
+    // Инициализация слайдера
+    $('.folder-slider').slick({
+        centerMode: true,
+        centerPadding: '20px',
+        slidesToShow: 3,
+        responsive: [
+            {
+                breakpoint: 768,
+                settings: {
+                    arrows: false,
+                    centerMode: true,
+                    centerPadding: '40px',
+                    slidesToShow: 3
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    arrows: false,
+                    centerMode: true,
+                    centerPadding: '40px',
+                    slidesToShow: 1
+                }
+            }
+        ]
+    });
 </script>
 
 <!-- Стили -->
@@ -71,8 +131,8 @@ Layout = "_Layout";
         display: flex;
         flex-direction: column;
         border-radius: 15px;
-        width: 95%; /* Увеличена ширина */
-        height: 300px; /* Увеличена высота */
+        width: 95%;
+        height: 300px;
     }
 
     .card-footer {
@@ -123,16 +183,43 @@ Layout = "_Layout";
 
     .card-img-top {
         transition: transform 0.3s ease;
-        height: 120px; /* Увеличена высота изображения */
-        width: 120px;  /* Увеличена ширина изображения */
+        height: 120px;
+        width: 120px;
     }
 
     .card:hover .card-img-top {
         transform: rotate(10deg);
     }
 
-    a:hover .card {
-        transform: scale(1.05);
-        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+    .card-book-img-top{
+        transition: transform 0.3s ease;
+        height: 120px;
+        width: 120px;
+    }
+    
+    .card:hover .card-book-img-top {
+        transform: rotate(-10deg);
+    }
+    
+    .folder-slider {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .slider-item {
+        text-align: center;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 300px;
+    }
+
+    /* Slick Slider */
+    .slick-prev:before,
+    .slick-next:before {
+        color: #4B0082; /* Цвет стрелок слайдера */
     }
 </style>

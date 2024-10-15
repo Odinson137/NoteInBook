@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
 using Note2Book.Models;
+using Note2Book.ViewModels;
 
 namespace Note2Book.Controllers;
 
@@ -12,6 +13,7 @@ namespace Note2Book.Controllers;
 public class ConspectusController : Controller
 {
     private readonly DataContext _context;
+
     public ConspectusController(DataContext context)
     {
         _context = context;
@@ -19,18 +21,19 @@ public class ConspectusController : Controller
 
     public async Task<IActionResult> Index()
     {
-         // Извлекаем userId из куки
-            var userIdCookie = Request.Cookies["UserId"];
-            if (userIdCookie == null)
-            {
-                // Если куки нет, перенаправляем пользователя на страницу логина
-                return RedirectToAction("Login", "User");
-            }
-        
-            // Преобразуем userId из строки в int (если используется int в базе данных)
-            int userId = int.Parse(userIdCookie);
-            
+        // Извлекаем userId из куки
+        var userIdCookie = Request.Cookies["UserId"];
+        if (userIdCookie == null)
+        {
+            // Если куки нет, перенаправляем пользователя на страницу логина
+            return RedirectToAction("Login", "User");
+        }
+
+        // Преобразуем userId из строки в int (если используется int в базе данных)
+        int userId = int.Parse(userIdCookie);
+
         var folders = await _context.Folders
+            .Where(c => c.User.Id == userId)
             .Select(c => new Folder
             {
                 Id = c.Id,
@@ -54,11 +57,30 @@ public class ConspectusController : Controller
                 },
                 CreatedAt = c.CreatedAt
             })
-            .Where(c => c.User.Id == userId)
             .ToListAsync();
-        return View(folders);
+
+        var books = await _context.Citations
+            .Where(c => c.Author.Id == userId)
+            .Select(c => new ShortCitationViewModel
+            {
+                Book = new ShortBookViewModel
+                {
+                    Id = c.Chapter.Book.Id,
+                    Title = c.Chapter.Book.Title,
+                    Image = c.Chapter.Book.Image
+                },
+                Note = c.Id
+            }).GroupBy(c => c.Book).ToListAsync();
+
+        var conspectus = new ConspectusViewModel
+        {
+            Folders = folders,
+            Books = books
+        };
+
+        return View(conspectus);
     }
-    
+
     [HttpGet]
     [Route("Create")]
     public IActionResult Create()
@@ -76,7 +98,7 @@ public class ConspectusController : Controller
         int userId = int.Parse(userIdCookie);
 
         var user = await _context.Users.FirstAsync(u => u.Id == userId);
-        
+
         var folder = new Folder
         {
             Text = model.Text,
@@ -89,7 +111,7 @@ public class ConspectusController : Controller
 
         return RedirectToAction("Index");
     }
-    
+
     // Метод для отображения страницы редактирования папки
     [HttpGet("Edit")]
     public async Task<IActionResult> Edit(int folderId)
@@ -99,6 +121,7 @@ public class ConspectusController : Controller
         {
             return NotFound();
         }
+
         return View(folder);
     }
 
@@ -120,7 +143,7 @@ public class ConspectusController : Controller
 
         return RedirectToAction("Index");
     }
-    
+
     [HttpGet("Delete/{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -136,5 +159,4 @@ public class ConspectusController : Controller
 
         return RedirectToAction("Index");
     }
-
 }

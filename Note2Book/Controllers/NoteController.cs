@@ -68,6 +68,32 @@ public class NoteController : Controller
         return View(folders);
     }
     
+    [Route("List")]
+    public async Task<IActionResult> List(int bookId)
+    {
+        // Извлекаем userId из куки
+        var userIdCookie = Request.Cookies["UserId"];
+        if (userIdCookie == null)
+        {
+            return RedirectToAction("Login", "User");
+        }
+        
+        var userId = int.Parse(userIdCookie);
+        
+        var query = await _context.Citations
+            .Where(c => bookId == c.Chapter.Book.Id)
+            .Where(c=>c.Author.Id == userId)
+            .Select(c => new CitationViewModel
+            {
+                Id = c.Id,
+                Text = c.Text,
+                Comment = c.Comment,
+                DateTime = c.DateTime,
+            }).ToListAsync();
+
+        return View(query);
+    }
+    
     [HttpGet("Edit/{id}")]
     public async Task<IActionResult> Edit(int id)
     {

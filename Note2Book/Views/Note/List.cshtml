@@ -1,0 +1,158 @@
+﻿@model System.Collections.Generic.List<CitationViewModel>
+
+@{
+ViewBag.Title = "Мои цитаты";
+Layout = "_Layout";
+}
+
+<div class="container">
+    <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Мои цитаты</h2>
+
+    <div class="row">
+        @foreach (var note in Model)
+        {
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-lg" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); padding: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #283C63; font-size: 1.5rem; font-weight: bold;">@note.Text</h5>
+                    <p class="card-text" style="color: #555;"><strong>Дата создания:</strong> @note.DateTime.ToString("dd MMM yyyy")</p>
+                    <p class="card-text" style="color: #333; line-height: 1.6;">@Html.Raw(note.Comment)</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <button class="btn btn-lg transparent-btn" onclick="confirmDelete('@note.Id')">Удалить</button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<script>
+    function confirmDelete(noteId) {
+        if (confirm("Вы уверены, что хотите удалить эту заметку?")) {
+            window.location.href = '@Url.Action("Delete", "Citation")/' + noteId;
+        }
+    }
+</script>
+
+<!-- Стили -->
+<style>
+    body {
+        background-color: #F8F9FA;
+        font-family: 'Nunito', sans-serif;
+    }
+
+    h2 {
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 40px;
+    }
+
+    .card {
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 15px;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-lg {
+        font-size: 1rem;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .unified-btn {
+        background-color: #4B0082;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .unified-btn:hover {
+        background-color: #8EC5FC;
+        color: white;
+    }
+
+    /* Стиль для кнопки редактирования папки */
+    .edit-folder-btn {
+        background-color: #8EC5FC;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .edit-folder-btn:hover {
+        background-color: #4B0082;
+        color: white;
+    }
+
+    /* Стиль для кнопки поиска */
+    .search-btn {
+        background-color: #4B0082;
+        color: white;
+        border-radius: 10px;
+        border: none;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .search-btn:hover {
+        background-color: #8EC5FC;
+        color: white;
+    }
+
+    /* Стиль для кнопки создания новой заметки */
+    .create-btn {
+        background-color: #8EC5FC;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .create-btn:hover {
+        background-color: #4B0082;
+        color: white;
+    }
+
+    /* Стиль для прозрачной кнопки удаления */
+    .transparent-btn {
+        background-color: transparent;
+        border: 2px solid #4B0082;
+        color: #4B0082;
+        border-radius: 10px;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .transparent-btn:hover {
+        background-color: #4B0082;
+        color: white;
+    }
+
+    .card-title {
+        margin-bottom: 15px;
+    }
+
+    .card-footer {
+        background-color: transparent;
+        border-top: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .folder-title {
+        margin-bottom: 0;
+    }
+</style>
