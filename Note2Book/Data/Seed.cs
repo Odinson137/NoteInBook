@@ -621,8 +621,8 @@ public class Seed
         var folder1 = new Folder
         {
             User = user1,
-            Text = "Одесса 2009",
-            ImageUrl = "images/blackfolder.png",
+            Text = "Личное",
+            ImageUrl = "images/folder.png",
             Notes = new List<Note>
             {
                 note1, 
@@ -631,7 +631,7 @@ public class Seed
         var folder2 = new Folder
         {
             User = user2,
-            Text = "Анапа 2005",
+            Text = "Личное",
             ImageUrl = "images/folder.png",
             Notes = new List<Note>
             {
@@ -642,8 +642,8 @@ public class Seed
         var folder3 = new Folder
         {
             User = user1,
-            Text = "Симпотная, но не потная",
-            ImageUrl = "https://storage.cloud.google.com/test_yuri_buryy/photo_2024-09-13_22-23-19.jpg",
+            Text = "Конспекты",
+            ImageUrl = "images/folder.png",
             Notes = new List<Note>
             {
                 note2,

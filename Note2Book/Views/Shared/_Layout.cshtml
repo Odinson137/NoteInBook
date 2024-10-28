@@ -127,26 +127,62 @@
             transform: translateY(-50%);
         }
 
-        footer {
-            background-color: #6A0dad;
+        .footer {
+            background: linear-gradient(90deg, #6A0dad 0%, #9B59b6 100%);
             color: #ffffff;
-            padding: 10px 0;
-            text-align: center;
-            width: 100%;
-            position: relative;
-            bottom: 0;
-            font-size: 0.9rem;
+            padding: 15px 0; /* Уменьшено верхнее и нижнее отступы */
         }
 
-        footer a {
+        .footer .font-weight-bold {
+            font-weight: 600;
+            margin-bottom: 10px; /* Дополнительный отступ между заголовком и списком */
+        }
+
+        .footer-link {
             color: #ffd700;
             text-decoration: none;
-            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
-        footer a:hover {
+        .footer-link:hover {
+            color: #ffffff;
             text-decoration: underline;
         }
+
+        .footer hr {
+            border-color: rgba(255, 255, 255, 0.3);
+            margin: 8px 0; /* Уменьшенное расстояние сверху и снизу */
+        }
+
+        .footer .input-group .form-control {
+            border: none;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+        }
+
+        .footer .input-group .btn-outline-light {
+            border: none;
+            border-radius: 0 5px 5px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+
+        .footer .input-group .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Настройка списка социальных сетей */
+        .footer .social-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px; /* Уменьшенное расстояние между элементами соцсетей */
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+
 
         html, body {
             height: 100%;
@@ -173,27 +209,27 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">Books</a>
+                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">Книги</a>
                     </li>
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Conspectus" asp-action="Index">Conspectus</a>
+                        <a class="nav-link" asp-area="" asp-controller="Conspectus" asp-action="Index">Заметки</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
+                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Logout">Выход</a>
                     </li>
                     }
                     else
                     {
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Register">Sign in</a>
+                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Register">Регистрация</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Login">Sign up</a>
+                        <a class="nav-link" asp-area="" asp-controller="User" asp-action="Login">Вход</a>
                     </li>
                     }
                 </ul>
@@ -208,11 +244,53 @@
     </main>
 </div>
 
-<footer class="footer mt-auto">
+<footer class="footer mt-auto py-3">
     <div class="container">
-        &copy; 2024 - NoteInBook - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="row">
+            <!-- Навигация -->
+            <div class="col-md-4 col-sm-6 mb-3">
+                <h6 class="text-uppercase font-weight-bold">Навигация</h6>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="#" class="footer-link">Главная</a></li>
+                    <li><a href="#" class="footer-link">Мои книги</a></li>
+                    <li><a href="#" class="footer-link">Мои заметки</a></li>
+                    <li><a href="#" class="footer-link">Privacy</a></li>
+                </ul>
+            </div>
+
+            <!-- Соцсети -->
+            <div class="col-md-4 col-sm-6 mb-3">
+                <h6 class="text-uppercase font-weight-bold">Мы в соцсетях</h6>
+                <ul class="social-list mb-0">
+                    <li><a href="https://facebook.com" class="footer-link">Facebook</a></li>
+                    <li><a href="https://twitter.com" class="footer-link">Twitter</a></li>
+                    <li><a href="https://instagram.com" class="footer-link">Instagram</a></li>
+                </ul>
+            </div>
+
+            <!-- Подписка на рассылку и Контакты -->
+            <div class="col-md-4 col-sm-12 mb-3">
+                <h6 class="text-uppercase font-weight-bold">Подписка на новости</h6>
+                <form class="mb-3">
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Ваш email" />
+                        <button type="submit" class="btn btn-outline-light">Подписаться</button>
+                    </div>
+                </form>
+                <h6 class="text-uppercase font-weight-bold">Контакты</h6>
+                <p class="mb-0">Email: support@noteinbook.com</p>
+            </div>
+        </div>
+        <hr class="mb-2 mt-0"/>
+        <p class="text-center mb-0">&copy; 2024 - NoteInBook - Все права защищены</p>
     </div>
 </footer>
+
+
+
+
+
+
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

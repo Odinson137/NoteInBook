@@ -30,7 +30,7 @@ public class ConspectusController : Controller
         }
 
         // Преобразуем userId из строки в int (если используется int в базе данных)
-        int userId = int.Parse(userIdCookie);
+        int userId = int.Parse(userIdCookie);    
 
         var folders = await _context.Folders
             .Where(c => c.User.Id == userId)

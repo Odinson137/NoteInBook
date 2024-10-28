@@ -50,6 +50,7 @@
         </div>
     }
 
+    <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Мои Цитаты</h2>
     @if (Model.Books != null)
     {
         <div class="folder-slider">
@@ -119,9 +120,28 @@
     }
 
     h2 {
-        font-weight: 700;
-        letter-spacing: 1px;
-        margin-bottom: 40px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 2.5rem;
+        color: #6A0dad;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        width: 100%; /* Заголовок по центру */
+    }
+
+    h2::after {
+        content: '';
+        position: absolute;
+        width: 50%;  /* Уменьшено до 50% */
+        height: 4px;
+        background-color: #9B59b6;
+        bottom: -10px;
+        left: 25%;  /* Сдвинуть влево для выравнивания */
+        border-radius: 2px;
     }
 
     .card {
