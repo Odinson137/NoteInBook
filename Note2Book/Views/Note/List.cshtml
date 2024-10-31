@@ -1,8 +1,8 @@
 ﻿@model System.Collections.Generic.List<CitationViewModel>
 
 @{
-ViewBag.Title = "Мои цитаты";
-Layout = "_Layout";
+    ViewBag.Title = "Мои цитаты";
+    Layout = "_Layout";
 }
 
 <div class="container">
@@ -11,20 +11,22 @@ Layout = "_Layout";
     <div class="row">
         @foreach (var note in Model)
         {
-        <div class="col-md-6 mb-4">
-            <div class="card h-100 shadow-lg" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); padding: 20px;">
-                <div class="card-body">
-                    <a href="/Chapter/ReadChapter?chapterId=@note.ChapterId&pageNumber=@(Math.DivRem(note.Start, 5000))" style="text-decoration: none;">
-                    <h5 class="card-title" style="color: #283C63; font-size: 1.5rem; font-weight: bold;">@note.Text</h5>
-                    <p class="card-text" style="color: #555;"><strong>Дата создания:</strong> @note.DateTime.ToString("dd MMM yyyy")</p>
-                    <p class="card-text" style="color: #333; line-height: 1.6;">@Html.Raw(note.Comment)</p>
-                    </a>
-                </div>
-                <div class="card-footer d-flex justify-content-between align-items-center">
-                    <button class="btn btn-lg transparent-btn" onclick="confirmDelete('@note.Id')">Удалить</button>
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-lg" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); padding: 20px;">
+                    <div class="card-body">
+                        <a href="/Chapter/ReadChapter?chapterId=@note.ChapterId&pageNumber=@(Math.DivRem(note.Start, 5000))" style="text-decoration: none;">
+                            <h5 class="card-title" style="color: #283C63; font-size: 1.5rem; font-weight: bold;">@note.Text</h5>
+                            <p class="card-text" style="color: #555;">
+                                <strong>Дата создания:</strong> @note.DateTime.ToString("dd MMM yyyy")
+                            </p>
+                            <p class="card-text" style="color: #333; line-height: 1.6;">@Html.Raw(note.Comment)</p>
+                        </a>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <button class="btn btn-lg transparent-btn" onclick="confirmDelete('@note.Id')">Удалить</button>
+                    </div>
                 </div>
             </div>
-        </div>
         }
     </div>
 </div>
@@ -32,7 +34,19 @@ Layout = "_Layout";
 <script>
     function confirmDelete(noteId) {
         if (confirm("Вы уверены, что хотите удалить эту цитату?")) {
-            window.location.href = '@Url.Action("Delete", "Citation")/' + noteId;
+            $.ajax({
+                url: '@Url.Action("Delete", "Citation")',
+                method: 'POST',
+                data: { id: noteId },
+                success: function (response) {
+                    $('#quoteCommentModal').modal('hide');
+                    location.reload();
+                    // Обновление текста страницы после удаления цитаты
+                },
+                error: function () {
+                    alert('Произошла ошибка при удалении цитаты.');
+                }
+            });
         }
     }
 </script>

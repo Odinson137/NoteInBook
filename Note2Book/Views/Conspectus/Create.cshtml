@@ -8,7 +8,7 @@ Layout = "_Layout";
 <div class="container">
     <h2 class="text-center my-4 display-4" style="color: #4B0082;">Создать новую папку</h2>
 
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" id="formochka">
         <div class="form-group">
             <label for="Text" style="color: #283C63; font-size: 1.2rem;">Название папки</label>
             <input type="text" class="form-control" id="Text" name="Text" required style="border-radius: 10px; padding: 10px; font-size: 1rem; border: 2px solid #8EC5FC;" />
@@ -30,8 +30,12 @@ Layout = "_Layout";
     }
 
     .container {
-        max-width: 600px;
         margin-top: 50px;
+    }
+
+    #formochka {
+        width: 600px;
+        justify-self: center;
     }
 
     h2 {

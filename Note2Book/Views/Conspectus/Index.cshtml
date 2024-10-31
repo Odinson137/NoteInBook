@@ -50,9 +50,10 @@
         </div>
     }
 
-    <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Мои Цитаты</h2>
-    @if (Model.Books != null)
+    @if (Model.Books != null && Model.Books.Any())
     {
+        <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Мои Цитаты</h2>
+
         <div class="folder-slider">
             @foreach (var bookGroup in Model.Books)
             {
