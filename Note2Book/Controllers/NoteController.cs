@@ -89,6 +89,9 @@ public class NoteController : Controller
                 Text = c.Text,
                 Comment = c.Comment,
                 DateTime = c.DateTime,
+                Start = c.Start,
+                ChapterId = c.Chapter.Id,
+                
             }).ToListAsync();
 
         return View(query);

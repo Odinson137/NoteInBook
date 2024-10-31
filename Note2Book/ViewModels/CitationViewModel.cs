@@ -8,5 +8,6 @@ public class CitationViewModel
     public int Start { get; set; }
     public int End { get; set; }
     
+    public int ChapterId { get; set; }
     public DateTime DateTime { get; set; }
 }

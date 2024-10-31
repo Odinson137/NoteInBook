@@ -20,11 +20,10 @@ public class HomeController : Controller
         var userIdCookie = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userIdCookie == null)
         {
-            return View(new HomeViewModel
-            {
-                FavoriteBooks = []
-            });
+            return RedirectToAction("Index", "Book");
+            
         }
+    
         var userId = int.Parse(userIdCookie);
     
         var favoriteBooks = await _context.Favorites

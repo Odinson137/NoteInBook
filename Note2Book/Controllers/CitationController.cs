@@ -72,7 +72,7 @@ public class CitationController : Controller
 
         if (citation == null)
         {
-            return NotFound("Citation not found");
+            return NotFound("Цитата не найдена");
         }
 
         _context.Remove(citation);

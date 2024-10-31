@@ -14,7 +14,7 @@ public class DataContext : DbContext
             if (!databaseCreator.CanConnect()) databaseCreator.Create();
             if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
         }
-    }
+    }   
     
     protected override void OnModelCreating(ModelBuilder builder)
     {

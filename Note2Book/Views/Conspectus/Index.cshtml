@@ -56,7 +56,7 @@
         <div class="folder-slider">
             @foreach (var bookGroup in Model.Books)
             {
-                var book = bookGroup.Key; // Так как используется GroupBy, ключом будет объект книги
+                var book = bookGroup.Key; 
                 <div class="slider-item">
                     <div class="card h-100 d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); width: 95%; height: 300px;">
                         <a href="@Url.Action("List", "Note", new { bookId = book.Id })" class="text-decoration-none" style="flex-grow: 1;">

@@ -38,10 +38,11 @@ Layout = "_Layout";
             <span asp-validation-for="Text" class="text-danger"></span>
         </div>
 
-        <div class="text-center mt-4">
+        <div class="text-center mt-4 mb-5"> <!-- добавлено mb-5 для увеличения нижнего отступа -->
             <button type="submit" class="btn btn-lg btn-primary">Сохранить изменения</button>
             <a href="@Url.Action("Index", "Note")" class="btn btn-lg btn-secondary">Отмена</a>
         </div>
+
     </form>
 </div>
 
