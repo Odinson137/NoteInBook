@@ -1,6 +1,9 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Note2Book.Dto;
+using Note2Book.Interfaces;
 using Note2Book.Models;
 
 namespace Note2Book.Data;
@@ -8,10 +11,14 @@ namespace Note2Book.Data;
 public class Seed
 {
     private readonly DataContext _context;
+    private readonly IElasticService _elasticService;
+    private readonly IMapper _mapper;
 
-    public Seed(DataContext context)
+    public Seed(DataContext context, IMapper mapper, IElasticService elasticService)
     {
         _context = context;
+        _mapper = mapper;
+        _elasticService = elasticService;
     }
 
     public async Task Seeding()
@@ -31,8 +38,7 @@ public class Seed
             // await _context.SaveChangesAsync();
             return;
         }
-
-
+        
         var user1 = new User
         {
             Name = "Яна",
@@ -650,15 +656,8 @@ public class Seed
             },
         };
         
-        await _context.AddRangeAsync(book1);
-        await _context.AddRangeAsync(book2);
-        await _context.AddRangeAsync(book3);
-        await _context.AddRangeAsync(book4);
-        await _context.AddRangeAsync(book5);
-        await _context.AddRangeAsync(book6);
-        await _context.AddRangeAsync(book7);
-        await _context.AddRangeAsync(book8);
-        await _context.AddRangeAsync(book9);
+        ICollection<Book> books = [book1, book2, book3, book4, book5, book6, book7, book8, book9];
+        await _context.AddRangeAsync(books);
         
         await _context.AddRangeAsync(note1);
         await _context.AddRangeAsync(note2);
@@ -672,5 +671,10 @@ public class Seed
         await _context.AddRangeAsync(bookComment3);
         
         await _context.SaveChangesAsync();
+
+        var booksDto = _mapper.Map<ICollection<BookDto>>(books);
+
+        await _elasticService.AddIndexAsync<BookDto>();
+        await _elasticService.AddOrUpdateEntitiesAsync(booksDto);
     }
 }

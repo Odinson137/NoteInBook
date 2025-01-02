@@ -1,6 +1,9 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
+using Note2Book.Dto;
+using Note2Book.Interfaces;
 using Note2Book.Models;
 using Note2Book.ViewModels;
 
@@ -10,9 +13,11 @@ namespace Note2Book.Controllers;
 public class BookController : Controller
 {
     private readonly DataContext _context;
-    public BookController(DataContext context)
+    private readonly IBookElasticService _bookElasticService;
+    public BookController(DataContext context, IBookElasticService bookElasticService)
     {
         _context = context;
+        _bookElasticService = bookElasticService;
     }
        
     [HttpGet]
@@ -21,16 +26,21 @@ public class BookController : Controller
         // Извлекаем все книги
         var booksQuery = _context.Books.AsQueryable();
 
+        var stopwatch = Stopwatch.StartNew();
+
         // Проверяем, если в строке поиска что-то введено
         if (!string.IsNullOrEmpty(searchString))
         {
             // Поиск по названию книги, автору и жанру
-            booksQuery = booksQuery.Where(b =>
-                b.Title.Contains(searchString) ||
-                b.Author.Name.Contains(searchString) ||
-                b.Author.LastName.Contains(searchString) ||
-                b.Genres.Any(g => g.Title.Contains(searchString))
-            );
+            // booksQuery = booksQuery.Where(b =>
+            //     b.Title.Contains(searchString) ||
+            //     b.Author.Name.Contains(searchString) ||
+            //     b.Author.LastName.Contains(searchString) ||
+            //     b.Genres.Any(g => g.Title.Contains(searchString))
+            // );
+
+            var response = await _bookElasticService.SearchBooksAsync(searchString);
+            booksQuery = booksQuery.Where(book => response.Contains(book.Id));
         }
         
         var userIdCookie = Request.Cookies["UserId"] ?? "0";
@@ -60,7 +70,11 @@ public class BookController : Controller
             })
             .ToListAsync();
 
-        // Возвращаем результат поиска в представление
+        stopwatch.Stop();
+
+        // Выводим результат
+        Console.WriteLine($"Время выполнения: {stopwatch.ElapsedMilliseconds} мс");
+
         return View(books);
     }
 

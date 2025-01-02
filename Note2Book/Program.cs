@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
+using Note2Book.Interfaces;
+using Note2Book.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -25,7 +27,13 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         options.LoginPath = "/User/Login";
         options.AccessDeniedPath = "/User/AccessDenied";
     });
+services.Configure<ElasticSearchSettings>(configuration.GetSection("ElasticSearchSettings"));
+    
+services.AddAutoMapper(typeof(AutoMapperProfile));
+services.AddSingleton<IElasticService, ElasticService>();
+services.AddSingleton<IBookElasticService, BookElasticService>();
 services.AddScoped<Seed>();
+
 
 var app = builder.Build();
 
