@@ -30,8 +30,9 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 services.Configure<ElasticSearchSettings>(configuration.GetSection("ElasticSearchSettings"));
     
 services.AddAutoMapper(typeof(AutoMapperProfile));
-services.AddSingleton<IElasticService, ElasticService>();
-services.AddSingleton<IBookElasticService, BookElasticService>();
+services.AddScoped<IElasticService, ElasticService>();
+services.AddScoped<IBookElasticService, BookElasticService>();
+services.AddScoped<IActivityService, ActivityService>();
 services.AddScoped<Seed>();
 
 

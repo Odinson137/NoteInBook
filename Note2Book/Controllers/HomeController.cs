@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
+using Note2Book.Interfaces;
 using Note2Book.ViewModels;
 
 namespace Note2Book.Controllers;
@@ -10,9 +11,11 @@ namespace Note2Book.Controllers;
 public class HomeController : Controller
 {
     private readonly DataContext _context;
-    public HomeController(DataContext context)
+    private readonly IActivityService _activityService;
+    public HomeController(DataContext context, IActivityService activityService)
     {
         _context = context;
+        _activityService = activityService;
     }
 
     public async Task<IActionResult> Index()
@@ -37,9 +40,11 @@ public class HomeController : Controller
                 Author = f.Book.Author
             }).ToListAsync();
 
+        var activities = _activityService.GetDayActivities(userId);
         var homeViewModel = new HomeViewModel
         {
-            FavoriteBooks = favoriteBooks
+            FavoriteBooks = favoriteBooks,
+            Activities = activities
         };
         return View(homeViewModel);
     }

@@ -10,6 +10,8 @@
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@latest"></script>
 
 <div class="text-center">
     <h2>Избранные книги</h2>
@@ -22,6 +24,22 @@
             </div>
         }
     </div>
+</div>
+
+@{
+    var activities = Model.Activities
+        .GroupBy(a => a.CreatedAt.Date)
+        .Select(g => new { Date = g.Key, Count = g.Count() })
+        .ToList();
+}
+
+<script>
+    const activities = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(activities));
+</script>
+
+<div class="text-center">
+    <h2>Активность за сегодня</h2>
+    <canvas id="activityChart" width="400" height="200"></canvas>
 </div>
 
 <script>
@@ -49,6 +67,42 @@
                 }
             }
         ]
+    });
+
+    const ctx = document.getElementById('activityChart').getContext('2d');
+    const activityChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: activities.map(a => new Date(a.Date)),
+            datasets: [{
+                label: 'Количество активностей',
+                data: activities.map(a => a.Count),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1,
+                fill: true,
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Дата'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Количество'
+                    }
+                }
+            }
+        }
     });
 </script>
 
@@ -89,7 +143,7 @@
         align-items: center;
         justify-content: center;
         height: 100%;
-        min-height: 250px; 
+        min-height: 250px;
     }
 
     .slider-item img {

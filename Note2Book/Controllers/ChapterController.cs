@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Note2Book.Models;
 using Note2Book.ViewModels;
-using System;
-using System.Linq;
 using System.Security.Claims;
 using Note2Book.Data;
+using Note2Book.Interfaces;
 
 namespace Note2Book.Controllers
 {
     public class ChapterController : Controller
     {
         private readonly DataContext _context;
+        private readonly IActivityService _activityService;
 
-        public ChapterController(DataContext context)
+        public ChapterController(DataContext context, IActivityService activityService)
         {
             _context = context;
+            _activityService = activityService;
         }
 
         public IActionResult ReadChapter(int chapterId, int pageNumber = 1)
@@ -73,6 +73,8 @@ namespace Note2Book.Controllers
                         End = c.End
                     })
                     .ToList();
+                
+                _activityService.AddActivity(userId);
             }
 
             var model = new ChapterViewModel
@@ -85,7 +87,7 @@ namespace Note2Book.Controllers
                 PreviousChapter = previousChapter,
                 Citations = citations
             };
-
+            
             return View(model);
         }
 
