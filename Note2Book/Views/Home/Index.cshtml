@@ -1,17 +1,26 @@
 ﻿@model Note2Book.ViewModels.HomeViewModel
 
+@functions {
+    public class Тest
+    {
+        public DateTime Date { get; set; }
+        public int Count { get; set; }
+    }
+}
+
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-
 <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@latest"></script>
+
 
 <div class="text-center">
     <h2>Избранные книги</h2>
@@ -26,23 +35,108 @@
     </div>
 </div>
 
+<div class="text-center">
+    <h2>Календарная матрица</h2>
+    <canvas id="calendarChart"></canvas>
+</div>
+
 @{
-    var activities = Model.Activities
-        .GroupBy(a => a.CreatedAt.Date)
-        .Select(g => new { Date = g.Key, Count = g.Count() })
+    var currentDate = DateTime.Now;
+    var firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+    var daysInMonth = DateTime.DaysInMonth(currentDate.Year, currentDate.Month);
+
+    var allDays = Enumerable.Range(0, daysInMonth)
+        .Select(i => new Тest { Date = firstDayOfMonth.AddDays(i), Count = 0 })
         .ToList();
+
+    foreach (var activity in Model.Activities)
+    {
+        var matchingDay = allDays.FirstOrDefault(d => d.Date.Date == activity.CreatedAt.Date);
+        if (matchingDay != null)
+        {
+            matchingDay.Count += 1;
+        }
+    }
+
+    var matrixData = allDays.Select((d) => new
+    {
+        x = (int)d.Date.DayOfWeek, // Столбец: День недели (0 - воскресенье, 6 - суббота)
+        y = (int)((d.Date.Day - 1 + (int)firstDayOfMonth.DayOfWeek) / 7), // Строка: Неделя месяца
+        v = d.Count, // Количество активностей
+        date = d.Date.ToString("dd.MM") // Дата для всплывающих подсказок
+    }).ToList();
 }
 
 <script>
-    const activities = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(activities));
-</script>
+    const matrixData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(matrixData));
+    const ctx = document.getElementById('calendarChart').getContext('2d');
+    const calendarChart = new Chart(ctx, {
+        type: 'matrix',
+        data: {
+            datasets: [{
+                label: 'Яна',
+                data: matrixData,
+                backgroundColor: (context) => {
+                    const value = context.dataset.data[context.dataIndex].v;
+                    return value === 0
+                        ? 'rgba(200, 200, 200, 0.8)' // Серый цвет для дней без активности
+                        : value > 5
+                            ? 'rgba(34, 139, 34, 0.8)' // Зелёный для активных дней
+                            : 'rgba(144, 238, 144, 0.8)'; // Светло-зелёный для средней активности
+                },
+                borderColor: 'rgba(0, 0, 0, 0.1)',
+                borderWidth: 0,
+                width: 95, // Ширина прямоугольников
+                height: 50 // Высота прямоугольников
+            }]
+        },
+        options: {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: (tooltipItems) => `Дата: ${tooltipItems[0].raw.date}`,
+                        label: (tooltipItem) => `Активности: ${tooltipItem.raw.v}`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'top',
+                    offset: true,
+                    ticks: {
+                        callback: (value) => ['Пон', 'Вт', 'Ср', 'Чт', 'Пят', 'Суб', 'Вос'][value],
+                        stepSize: 1,
+                    },
+                    grid: {
+                        display: false,
+                        drawBorder: false,
+                    },
+                },
+                y: {
+                    type: 'linear',
+                    ticks: {
+                        stepSize: 1,
+                        callback: (value) => `${value + 1}`
+                    },
+                    offset: true,
+                    grid: {
+                        display: false,
+                        drawBorder: false,
+                    }
+                }
+            },
+            layout: {
+                padding: {
+                    top: 20, // Отступ сверху
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                }
+            }
+        }
+    });
 
-<div class="text-center">
-    <h2>Активность за сегодня</h2>
-    <canvas id="activityChart" width="400" height="200"></canvas>
-</div>
-
-<script>
     $('.favorite-slider').slick({
         centerMode: true,
         centerPadding: '60px',
@@ -68,45 +162,14 @@
             }
         ]
     });
-
-    const ctx = document.getElementById('activityChart').getContext('2d');
-    const activityChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: activities.map(a => new Date(a.Date)),
-            datasets: [{
-                label: 'Количество активностей',
-                data: activities.map(a => a.Count),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 1,
-                fill: true,
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'day'
-                    },
-                    title: {
-                        display: true,
-                        text: 'Дата'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Количество'
-                    }
-                }
-            }
-        }
-    });
 </script>
 
 <style>
+    #calendarChart {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
     h2 {
         font-family: 'Poppins', sans-serif;
         font-weight: 600;
