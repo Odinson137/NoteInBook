@@ -45,7 +45,7 @@ public class BookController : Controller
         
         var userIdCookie = Request.Cookies["UserId"] ?? "0";
         var userId = int.Parse(userIdCookie);
-        var userFavoritesIds = await _context.Favorites
+        var userFavoritesIds = await _context.Favorites.Where(c => c.UserBook == UserBook.Favorite)
             .Where(c => c.User.Id == userId)
             .Select(c => c.Book.Id)
             .ToListAsync();

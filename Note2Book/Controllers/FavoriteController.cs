@@ -24,7 +24,7 @@ public class FavoriteController : Controller
         var userIdCookie = Request.Cookies["UserId"];
         var userId = int.Parse(userIdCookie!);
 
-        var favoriteDb = await _context.Favorites.FirstOrDefaultAsync(c => c.Book.Id == bookId && c.User.Id == userId);
+        var favoriteDb = await _context.Favorites.FirstOrDefaultAsync(c => c.Book.Id == bookId && c.User.Id == userId && c.UserBook == UserBook.Favorite);
         if (favoriteDb == null)
         {
             var user = _context.Users.SingleOrDefault(u => u.Id == userId);
@@ -63,7 +63,7 @@ public class FavoriteController : Controller
         }
         var userId = int.Parse(userIdCookie);
     
-        var favoriteBooks = await _context.Favorites
+        var favoriteBooks = await _context.Favorites.Where(c => c.UserBook == UserBook.Favorite)
             .Include(f => f.Book)
             .ThenInclude(b => b.Author) 
             .Where(f => f.User.Id == userId)

@@ -36,8 +36,8 @@ public class ActivityService : IActivityService
 
     public void AddActivity(Activity activity)
     {
-        _context.Activities.AddAsync(activity);
-        _context.SaveChangesAsync();
+        _context.Activities.Add(activity);
+        _context.SaveChanges();
     }
 
     public void AddActivity(User user)

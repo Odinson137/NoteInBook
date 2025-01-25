@@ -1,44 +1,97 @@
-﻿@model Note2Book.ViewModels.HomeViewModel
+@using Note2Book.Data
+@model Note2Book.ViewModels.HomeViewModel
+
+<link rel="stylesheet" type="text/css" href="/lib/slick-1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="/lib/slick-1.8.1/slick/slick-theme.css"/>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="/lib/slick-1.8.1/slick/slick.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@latest"></script>
+
+@{
+    ViewData["Title"] = "Home Page";
+    string activeTab = "status"; // Default tab
+}
+
+<div class="tabs-container">
+    <ul class="tabs">
+        <li>
+            <button class="tab-button @(activeTab == "calendar" ? "active" : "")" onclick="setActiveTab('calendar')">
+                Календарь
+        <li>
+            <button class="tab-button @(activeTab == "favorites" ? "active" : "")" onclick="setActiveTab('favorites')">
+                Избранные
+            </button>
+        </li>
+            </button>
+        </li>
+        <li>
+            <button class="tab-button @(activeTab == "status" ? "active" : "")" onclick="setActiveTab('status')">
+                Статус
+            </button>
+        </li>
+        <li>
+            <button class="tab-button @(activeTab == "profile" ? "active" : "")" onclick="setActiveTab('profile')">
+                Профиль
+            </button>
+        </li>
+    </ul>
+</div>
+
+<div class="tab-content">
+    <div id="favorites" class="tab-pane @(activeTab == "favorites" ? "active-pane" : "hidden-pane")">
+        <div class="favorite-slider">
+            @foreach (var favorite in Model.FavoriteBooks)
+            {
+                <div class="slider-item">
+                    <img src="@favorite.Image">
+                    <p>@favorite.Author.LastName @favorite.Author.Name</p>
+                </div>
+            }
+        </div>
+    </div>
+    <div id="calendar" class="tab-pane @(activeTab == "calendar" ? "active-pane" : "hidden-pane")"
+         style="width: 60%; justify-self: center">
+        <canvas id="calendarChart"></canvas>
+    </div>
+    <div id="status" class=" status-container tab-pane @(activeTab == "status" ? "active-pane" : "hidden-pane")">
+        <div class="status-container">
+            @foreach (var status in new[] { ("Хочу", UserBook.WillRead), ("Читаю", UserBook.Reading), ("Прочитал", UserBook.Read) })
+            {
+                <div class="status-column" data-status="@status.Item1">
+                    <h3>@status.Item1</h3>
+                    <div class="book-list" id="list-@status.Item1" ondrop="onDrop(event)" ondragover="onDragOver(event)">
+                        @foreach (var book in Model.BookStatus.Where(c => c.UserBook == status.Item2))
+                        {
+                            <div class="book-item" draggable="true" ondragstart="onDragStart(event)" data-book-id="@book.Book.Id">
+                                    <img src="@book.Book.Image" style="width: 100px" draggable="true" ondragstart="onDragStart(event)" data-book-id="@book.Book.Id">
+                                    <p>@book.Book.Author.LastName @book.Book.Author.Name</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <button onclick="saveChanges()">Сохранить изменения</button>
+    </div>
+    <div id="profile" class="tab-pane @(activeTab == "profile" ? "active-pane" : "hidden-pane")">
+        <p>Информация о вашем профиле.</p>
+    </div>
+</div>
+
 
 @functions {
+
     public class Тest
     {
         public DateTime Date { get; set; }
         public int Count { get; set; }
     }
+
 }
-
-@{
-    ViewData["Title"] = "Home Page";
-}
-
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@latest"></script>
-
-
-<div class="text-center">
-    <h2>Избранные книги</h2>
-    <div class="favorite-slider">
-        @foreach (var favorite in Model.FavoriteBooks)
-        {
-            <div class="slider-item">
-                <img src="@favorite.Image" style="width: 150px; height: 200px;">
-                <p>@favorite.Author.LastName @favorite.Author.Name</p>
-            </div>
-        }
-    </div>
-</div>
-
-<div class="text-center">
-    <h2>Календарная матрица</h2>
-    <canvas id="calendarChart"></canvas>
-</div>
 
 @{
     var currentDate = DateTime.Now;
@@ -137,79 +190,159 @@
         }
     });
 
+    function setActiveTab(tabName) {
+        // Hide all tab panes
+        document.querySelectorAll('.tab-pane').forEach(pane => {
+            pane.classList.add('hidden-pane');
+            pane.classList.remove('active-pane');
+        });
+
+        // Show the selected tab pane
+        const selectedPane = document.getElementById(tabName);
+        if (selectedPane) {
+            selectedPane.classList.remove('hidden-pane');
+            selectedPane.classList.add('active-pane');
+        }
+
+        // Update active tab button styles
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        const activeButton = document.querySelector(`[onclick="setActiveTab('${tabName}')"]`);
+        if (activeButton) {
+            activeButton.classList.add('active');
+        }
+    }
+
+    console.log("Яна милаха");
     $('.favorite-slider').slick({
-        centerMode: true,
-        centerPadding: '60px',
         slidesToShow: 3,
         responsive: [
             {
                 breakpoint: 768,
                 settings: {
-                    arrows: false,
+                    arrows: true,
                     centerMode: true,
                     centerPadding: '40px',
-                    slidesToShow: 3
+                    slidesToShow: 2
                 }
             },
             {
                 breakpoint: 480,
                 settings: {
-                    arrows: false,
+                    arrows: true,
                     centerMode: true,
-                    centerPadding: '40px',
+                    centerPadding: '20px',
                     slidesToShow: 1
                 }
             }
         ]
     });
+
+    let draggedBookId = null;
+
+    function onDragStart(event) {
+        draggedBookId = event.target.dataset.bookId;
+    }
+
+    function onDragOver(event) {
+        event.preventDefault(); // Allow drop
+    }
+
+    function onDrop(event) {
+        event.preventDefault();
+        const targetList = event.target.closest('.book-list');
+        if (targetList && draggedBookId) {
+            const bookElement = document.querySelector(`.book-item[data-book-id='${draggedBookId}']`);
+            targetList.appendChild(bookElement);
+
+            // Update the status on the element
+            const newStatus = targetList.closest('.status-column').dataset.status;
+            bookElement.dataset.status = newStatus;
+        }
+    }
+
+    async function saveChanges() {
+        const updatedBooks = [];
+        document.querySelectorAll('.book-item').forEach(item => {
+            updatedBooks.push({
+                id: item.dataset.bookId,
+                status: item.closest('.status-column').dataset.status
+            });
+        });
+
+        // Send updated statuses to the server
+        const response = await fetch('/api/books/update-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedBooks)
+        });
+
+        if (response.ok) {
+            alert('Изменения сохранены!');
+        } else {
+            alert('Ошибка при сохранении изменений.');
+        }
+    }
 </script>
 
 <style>
-    #calendarChart {
-        max-width: 700px;
-        margin: 0 auto;
+    .tabs-container {
+        margin-bottom: 20px;
     }
 
-    h2 {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
-        font-size: 2.5rem;
-        color: #6A0dad; /* Основной цвет вашего сайта */
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 30px;
-        position: relative;
-        display: inline-block;
+    .tabs {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        padding: 0;
     }
 
-    h2::after {
-        content: '';
-        position: absolute;
-        width: 120%; /* Увеличена до 120% */
-        height: 4px;
-        background-color: #9B59b6; /* Второстепенный цвет */
-        bottom: -10px;
-        left: -10%; /* Сдвинута влево на 10% */
-        border-radius: 2px;
+    .tab-button {
+        margin: 0 10px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        background-color: #f0f0f0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
     }
+
+    .tab-button.active {
+        background-color: #6A0dad;
+        color: white;
+    }
+
+    .tab-content {
+        margin-top: 20px;
+    }
+
+    .tab-pane {
+        display: none;
+    }
+
+    .tab-pane.active-pane {
+        display: block;
+    }
+
 
     .favorite-slider {
-        width: 80%;
+        width: 70%;
         margin: 0 auto;
     }
 
     .slider-item {
         text-align: center;
-        padding: 20px;
+        padding: 40px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100%;
-        min-height: 250px;
+        width: 100vw;
     }
 
     .slider-item img {
+        height: 250px;
         margin: 0 auto;
         border-radius: 10px;
         margin-bottom: 10px;
@@ -229,5 +362,47 @@
     .slick-prev:before,
     .slick-next:before {
         color: #4B0082; /* Цвет стрелок слайдера */
+    }
+    
+    .slick-active {
+        height: 260px;
+    }
+
+    .status-container {
+        display: flex;
+        gap: 20px;
+        justify-content: space-around;
+    }
+
+    .status-column {
+        flex: 1;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .status-column h3 {
+        text-align: center;
+        color: #333;
+    }
+
+    .book-list {
+        min-height: 90%;
+        padding: 10px;
+        background-color: #e6e6e6;
+        border-radius: 5px;
+    }
+
+    .book-item {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        cursor: move;
+        text-align: center;
+    }
+
+    .book-item:active {
+        background-color: #ccc;
     }
 </style>

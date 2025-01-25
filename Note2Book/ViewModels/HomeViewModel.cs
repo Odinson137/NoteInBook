@@ -4,7 +4,9 @@ namespace Note2Book.ViewModels;
 
 public class HomeViewModel
 {
-    public ICollection<BookViewModel> FavoriteBooks { get; set; }
-    
-    public ICollection<Activity> Activities { get; set; }
+    public ICollection<BookViewModel> FavoriteBooks { get; set; } = [];
+
+    public ICollection<Favorite> BookStatus { get; set; } = [];
+
+    public ICollection<Activity> Activities { get; set; } = [];
 }
