@@ -9,7 +9,8 @@
                 <div class="download-buttons">
                     @foreach (var file in Model.Storages)
                     {
-                        <a href="/files/books/@file.Url" class="btn btn-download" download="@file.Url">Скачать @file.FileType.ToString()</a>
+                        <a href="/files/books/@file.Url" class="btn btn-download"
+                           download="@file.Url">Скачать @file.FileType.ToString()</a>
                     }
                 </div>
             </div>
@@ -32,7 +33,7 @@
                         }
                     }
                 </ul>
-                
+
                 <div class="status-buttons">
                     <button id="changeStatus" class="btn btn-status" data-status="WillRead">Will Read</button>
                 </div>
@@ -41,14 +42,14 @@
                 <div class="chapters">
                     @if (Model.Chapters.Any())
                     {
-                    @foreach (var chapter in Model.Chapters)
-                    {
-                    <div class="chapter-item">
-                        <span>@chapter.Title</span>
-                        <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = chapter.Id, pageNumber = 1 })"
-                           class="btn btn-primary">Читать</a>
-                    </div>
-                    }
+                        @foreach (var chapter in Model.Chapters)
+                        {
+                            <div class="chapter-item">
+                                <span>@chapter.Title</span>
+                                <a href="@Url.Action("ReadChapter", "Chapter", new { chapterId = chapter.Id, pageNumber = 1 })"
+                                   class="btn btn-primary">Читать</a>
+                            </div>
+                        }
                     }
                 </div>
 
@@ -64,7 +65,8 @@
                             <div class="comment-form">
                                 @Html.AntiForgeryToken() <!-- Вставляет CSRF-токен -->
                                 <h4>Оставить комментарий</h4>
-                                <textarea id="commentText" placeholder="Напишите ваш комментарий..." rows="4"></textarea>
+                                <textarea id="commentText" placeholder="Напишите ваш комментарий..."
+                                          rows="4"></textarea>
                                 <button id="submitComment" class="btn btn-primary">Отправить</button>
                             </div>
                         }
@@ -73,17 +75,18 @@
                             <h4>Комментарии</h4>
                             @if (Model.Comments.Any())
                             {
-                            foreach (var comment in Model.Comments)
-                            {
-                            <div class="comment-item">
-                                <p><strong>@comment.Author.Login</strong> (@comment.CreatedAt.ToShortDateString()):</p>
-                                <p>@comment.Text</p>
-                            </div>
-                            }
+                                foreach (var comment in Model.Comments)
+                                {
+                                    <div class="comment-item">
+                                        <p><strong>@comment.Author.Login</strong>
+                                            (@comment.CreatedAt.ToShortDateString()):</p>
+                                        <p>@comment.Text</p>
+                                    </div>
+                                }
                             }
                             else
                             {
-                            <p>Комментариев пока нет.</p>
+                                <p>Комментариев пока нет.</p>
                             }
                         </div>
                     </div>
@@ -283,8 +286,7 @@
         border: none;
         padding: 10px 20px;
         border-radius: 8px;
-        font-size: 1rem;
-        : pointer;
+        font-size: 1rem;: pointer;
         transition: background-color 0.3s ease;
     }
 
@@ -307,7 +309,7 @@
         $.ajax({
             url: '@Url.Action("AddComment", "Comment")',  // URL к вашему методу
             type: 'POST',
-            data: { bookId: bookId, commentText: commentText },  // Отправляем bookId
+            data: {bookId: bookId, commentText: commentText},  // Отправляем bookId
             xhrFields: {
                 withCredentials: true  // Обеспечиваем передачу сессионных данных
             },
@@ -319,31 +321,33 @@
             }
         });
     });
-    
-    document.getElementById('changeStatus').addEventListener('click', function () {
-    const bookId = @Model.Id;
-    const status = this.getAttribute('data-status');
 
-    if (bookId && status) {
-        $.ajax({
-            url: '@Url.Action("ChangeStatus", "Favorite")',
-            type: 'POST',
-            data: { bookId: bookId, status: status },
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert("Статус книги успешно изменен.");
-                    location.reload();
-                } else {
-                    alert("Не удалось изменить статус книги.");
+    document.getElementById('changeStatus').addEventListener('click', function () {
+        const bookId = @Model.Id;
+        const status = this.getAttribute('data-status');
+        console.log(bookId);
+        console.log(status);
+
+        if (bookId) {
+            $.ajax({
+                url: '@Url.Action("ChangeStatus", "Favorite")',
+                type: 'POST',
+                data: {bookId: bookId, status: 1},
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert("Статус книги успешно изменен.");
+                        location.reload();
+                    } else {
+                        alert("Не удалось изменить статус книги.");
+                    }
+                },
+                error: function () {
+                    alert("Произошла ошибка при изменении статуса книги.");
                 }
-            },
-            error: function () {
-                alert("Произошла ошибка при изменении статуса книги.");
-            }
-        });
-    }
-});
+            });
+        }
+    });
 </script>

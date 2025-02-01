@@ -9,4 +9,6 @@ public class HomeViewModel
     public ICollection<Favorite> BookStatus { get; set; } = [];
 
     public ICollection<Activity> Activities { get; set; } = [];
+    
+    public User User { get; set; }
 }

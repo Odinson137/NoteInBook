@@ -8,5 +8,7 @@ public class User : BaseModel
     
     public string Password { get; set; }
     
+    public string? ProfileImage { get; set; }
+    
     public List<Book> Books { get; set; }
 }

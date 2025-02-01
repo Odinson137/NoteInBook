@@ -18,7 +18,7 @@ public class FavoriteController : Controller
         _context = context;
     }
 
-    [HttpPost]
+    [HttpPost("Favorite")]
     public async Task<IActionResult> AddToFavorites(int bookId)
     {
         var userIdCookie = Request.Cookies["UserId"];
@@ -76,8 +76,9 @@ public class FavoriteController : Controller
     
         return Json(favoriteBooks);
     }
-    [HttpPost]
-    public async Task<IActionResult> ChangeStatus(int bookId, string status)
+    
+    [HttpPost("ChangeStatus")]
+    public async Task<IActionResult> ChangeStatus(int bookId, int status)
     {
         var userIdCookie = Request.Cookies["UserId"];
         if (userIdCookie == null)
@@ -87,21 +88,21 @@ public class FavoriteController : Controller
         var userId = int.Parse(userIdCookie);
 
         var favorite = await _context.Favorites.FirstOrDefaultAsync(f => f.Book.Id == bookId && f.User.Id == userId);
-
+        
         if (favorite == null)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
             var book = await _context.Books.SingleOrDefaultAsync(b => b.Id == bookId);
-
+        
             if (user != null && book != null)
             {
                 favorite = new Favorite
                 {
                     Book = book,
                     User = user,
-                    UserBook = Enum.Parse<UserBook>(status)
+                    UserBook = (UserBook)status
                 };
-
+        
                 _context.Favorites.Add(favorite);
             }
             else
@@ -111,11 +112,11 @@ public class FavoriteController : Controller
         }
         else
         {
-            favorite.UserBook = Enum.Parse<UserBook>(status);
+            favorite.UserBook = (UserBook)status;
         }
-
+        
         await _context.SaveChangesAsync();
         return Json(new { success = true });
     }
-
 }
+

@@ -60,11 +60,13 @@ public class HomeController : Controller
             }).ToListAsync();
 
         var activities = _activityService.GetDayActivities(userId);
+        var user = await _context.Users.SingleAsync(c => c.Id == userId);
         var homeViewModel = new HomeViewModel
         {
             FavoriteBooks = favoriteBooks,
             BookStatus = bookWithUserStatus,
-            Activities = activities
+            Activities = activities,
+            User = user
         };
         return View(homeViewModel);
     }

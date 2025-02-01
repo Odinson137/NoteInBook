@@ -15,10 +15,12 @@ namespace Note2Book.Controllers;
 public class UserController : Controller
 {
     private readonly DataContext _context;
+    private readonly IWebHostEnvironment _env;
     
-    public UserController(DataContext context)
+    public UserController(DataContext context, IWebHostEnvironment env)
     {
         _context = context;
+        _env = env;
     }
 
    
@@ -108,4 +110,42 @@ public class UserController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    [HttpPost("Update")]
+    public async Task<IActionResult> Update(User user, IFormFile? profileImage)
+    {
+        var dbUser = await _context.Users.SingleAsync(c => c.Id == user.Id);
+        if (profileImage != null)
+        {
+            // Путь к папке profiles
+            var profilesFolder = Path.Combine(_env.WebRootPath, "images", "profiles");
+
+            // Создание папки, если её нет
+            if (!Directory.Exists(profilesFolder))
+            {
+                Directory.CreateDirectory(profilesFolder);
+            }
+
+            // Генерация уникального имени файла
+            var uniqueFileName = Guid.NewGuid() + "_" + profileImage.FileName;
+            var imagePath = Path.Combine(profilesFolder, uniqueFileName);
+
+            // Сохранение файла
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                profileImage.CopyTo(stream);
+            }
+
+            // Обновление пути к фотографии профиля
+            dbUser.ProfileImage = $"/images/profiles/{uniqueFileName}";
+        }
+
+        dbUser.Login = user.Login;
+        dbUser.Name = user.Name;
+        if (!string.IsNullOrEmpty(user.Password))
+            dbUser.Password = user.Password;
+
+        await _context.SaveChangesAsync();
+
+        return Json(new { success = true });
+    }
 }

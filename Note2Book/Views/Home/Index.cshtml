@@ -10,10 +10,11 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@latest"></script>
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 
 @{
     ViewData["Title"] = "Home Page";
-    string activeTab = "status"; // Default tab
+    string activeTab = "favorites"; // Default tab
 }
 
 <div class="tabs-container">
@@ -61,12 +62,12 @@
         <div class="status-container">
             @foreach (var status in new[] { ("Хочу", UserBook.WillRead), ("Читаю", UserBook.Reading), ("Прочитал", UserBook.Read) })
             {
-                <div class="status-column" data-status="@status.Item1">
+                <div class="status-column" data-status="@((int)status.Item2)">
                     <h3>@status.Item1</h3>
                     <div class="book-list" id="list-@status.Item1" ondrop="onDrop(event)" ondragover="onDragOver(event)">
                         @foreach (var book in Model.BookStatus.Where(c => c.UserBook == status.Item2))
                         {
-                            <div class="book-item" draggable="true" ondragstart="onDragStart(event)" data-book-id="@book.Book.Id">
+                            <div class="book-item" draggable="true" onclick="onBookClick(@book.Book.Id)" ondragstart="onDragStart(event)" data-book-id="@book.Book.Id">
                                     <img src="@book.Book.Image" style="width: 100px" draggable="true" ondragstart="onDragStart(event)" data-book-id="@book.Book.Id">
                                     <p>@book.Book.Author.LastName @book.Book.Author.Name</p>
                             </div>
@@ -75,10 +76,32 @@
                 </div>
             }
         </div>
-        <button onclick="saveChanges()">Сохранить изменения</button>
     </div>
-    <div id="profile" class="tab-pane @(activeTab == "profile" ? "active-pane" : "hidden-pane")">
-        <p>Информация о вашем профиле.</p>
+    <div id="profile" class="tab-pane @(activeTab == "profile" ? "active-pane" : "hidden-pane")" style="margin-bottom: 50px">
+        <div class="profile-container">
+            <h2 style="margin-bottom: 20px">Привет, секси-гёрл @Model.User.Name</h2>
+            <form id="profileForm" enctype="multipart/form-data">
+                <div class="profile-image-container">
+                    <img id="profileImage" src='@(string.IsNullOrEmpty(Model.User.ProfileImage) ? "/images/profiles/0c481701-6868-491f-887d-a07684de0d35_photo_2023-04-05_13-34-22.jpg" : Model.User.ProfileImage)' alt="Фото профиля" class="profile-image" />
+                    <input type="file" id="profileImageInput" name="profileImage" accept="image/*" style="display: none;" />
+                    <button type="button" class="upload-button" onclick="document.getElementById('profileImageInput').click()">Изменить фото</button>
+                </div>
+                <input type="text" id="id" name="id" value="@Model.User.Id" hidden/>
+                <div class="form-group">
+                    <label for="name">Имя:</label>
+                    <input type="text" id="name" name="name" value="@Model.User.Name" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="login">Логин:</label>
+                    <input type="text" id="login" name="login" value="@Model.User.Login" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Новый пароль:</label>
+                    <input type="password" id="password" name="password" class="form-control" />
+                </div>
+                <button type="submit" class="save-button" style="margin-bottom: 10px">Сохранить изменения</button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -127,7 +150,7 @@
         type: 'matrix',
         data: {
             datasets: [{
-                label: 'Яна',
+                label: 'Активности',
                 data: matrixData,
                 backgroundColor: (context) => {
                     const value = context.dataset.data[context.dataIndex].v;
@@ -158,7 +181,7 @@
                     position: 'top',
                     offset: true,
                     ticks: {
-                        callback: (value) => ['Пон', 'Вт', 'Ср', 'Чт', 'Пят', 'Суб', 'Вос'][value],
+                        callback: (value) => [ 'Вос', 'Пон', 'Вт', 'Ср', 'Чт', 'Пят', 'Суб'][value],
                         stepSize: 1,
                     },
                     grid: {
@@ -189,6 +212,10 @@
             }
         }
     });
+    
+    function onBookClick(bookId) {
+        location.href="/Book/" + bookId;
+    }
 
     function setActiveTab(tabName) {
         // Hide all tab panes
@@ -257,6 +284,19 @@
             // Update the status on the element
             const newStatus = targetList.closest('.status-column').dataset.status;
             bookElement.dataset.status = newStatus;
+            $.ajax({
+                url: '@Url.Action("ChangeStatus", "Favorite")',
+                type: 'POST',
+                data: {bookId: draggedBookId, status: newStatus},
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (response) {
+                },
+                error: function () {
+                    alert("Произошла ошибка при изменении статуса книги.");
+                }
+            });
         }
     }
 
@@ -284,6 +324,39 @@
             alert('Ошибка при сохранении изменений.');
         }
     }
+
+    document.getElementById('profileImageInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profileImage').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Отправка формы
+    document.getElementById('profileForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch('/User/Update', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Изменения сохранены!');
+                } else {
+                    alert('Ошибка при сохранении изменений.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+    });
 </script>
 
 <style>
@@ -314,6 +387,7 @@
     }
 
     .tab-content {
+        padding-top: 31px;
         margin-top: 20px;
     }
 
@@ -390,7 +464,6 @@
     .book-list {
         min-height: 90%;
         padding: 10px;
-        background-color: #e6e6e6;
         border-radius: 5px;
     }
 
@@ -404,5 +477,74 @@
 
     .book-item:active {
         background-color: #ccc;
+    }
+
+     .profile-container {
+         max-width: 600px;
+         margin: 0 auto;
+         padding: 20px;
+         background-color: #fff;
+         border-radius: 10px;
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     }
+
+    .profile-image-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #6A0dad;
+    }
+
+    .upload-button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        background-color: #6A0dad;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .upload-button:hover {
+        background-color: #5a0a9d;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .save-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #6A0dad;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .save-button:hover {
+        background-color: #5a0a9d;
     }
 </style>
