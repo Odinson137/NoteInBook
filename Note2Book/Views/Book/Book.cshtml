@@ -26,12 +26,16 @@
                 <ul>
                     @if (Model.Genres.Any())
                     {
-                    @foreach (var genre in Model.Genres)
-                    {
-                    <li>@genre.Title</li>
-                    }
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <li>@genre.Title</li>
+                        }
                     }
                 </ul>
+                
+                <div class="status-buttons">
+                    <button id="changeStatus" class="btn btn-status" data-status="WillRead">Will Read</button>
+                </div>
 
                 <h4>Главы</h4>
                 <div class="chapters">
@@ -268,6 +272,25 @@
     .comment-form button:hover {
         background-color: #6a0dad;
     }
+
+    .status-buttons {
+        margin-top: 20px;
+    }
+
+    .btn-status {
+        background-color: #4B0082;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        : pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-status:hover {
+        background-color: #6a0dad;
+    }
 </style>
 
 <script>
@@ -296,4 +319,31 @@
             }
         });
     });
+    
+    document.getElementById('changeStatus').addEventListener('click', function () {
+    const bookId = @Model.Id;
+    const status = this.getAttribute('data-status');
+
+    if (bookId && status) {
+        $.ajax({
+            url: '@Url.Action("ChangeStatus", "Favorite")',
+            type: 'POST',
+            data: { bookId: bookId, status: status },
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert("Статус книги успешно изменен.");
+                    location.reload();
+                } else {
+                    alert("Не удалось изменить статус книги.");
+                }
+            },
+            error: function () {
+                alert("Произошла ошибка при изменении статуса книги.");
+            }
+        });
+    }
+});
 </script>
