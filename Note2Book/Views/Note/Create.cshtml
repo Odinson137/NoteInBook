@@ -1,7 +1,7 @@
 ﻿@model Note2Book.Models.Note
 
 @{
-ViewBag.Title = "Создать новую заметку";
+ViewBag.Title = "СОЗДАТЬ НОВУЮ ЗАМЕТКУ";
 Layout = "_Layout";
 }
 
@@ -10,7 +10,7 @@ Layout = "_Layout";
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Создать новую заметку</h2>
+    <h2 class="text-center mb-4">СОЗДАТЬ НОВУЮ ЗАМЕТКУ</h2>
 
     <form asp-action="Create" asp-controller="Note" method="post" class="needs-validation" novalidate>
         <input type="hidden" name="FolderId" value="@ViewBag.FolderId" />
@@ -57,12 +57,16 @@ Layout = "_Layout";
     }
 
     h2 {
-        color: #4B0082;
-        font-family: 'Poppins', sans-serif;
+        color: #3D2765;
+        font-family: 'Lora', serif;
         font-weight: 700;
         text-align: center;
         margin-bottom: 40px;
         font-size: 2.5rem;
+       
+
+       
+        
     }
 
     .form-group {
@@ -128,19 +132,19 @@ Layout = "_Layout";
     }
 
     .btn-primary {
-        background-color: #6a0dad;
+        background-color: #A185D3;
     }
 
     .btn-primary:hover {
-        background-color: #8EC5FC;
+        background-color: rgba(161, 133, 211, 0.7);
     }
 
     .btn-secondary {
-        background-color: #8EC5FC;
+        background-color: #4B0082;
     }
 
     .btn-secondary:hover {
-        background-color: #4B0082;
+        background-color: #A185D3;
     }
 </style>
 

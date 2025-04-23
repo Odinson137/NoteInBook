@@ -102,7 +102,7 @@ public class ConspectusController : Controller
         var folder = new Folder
         {
             Text = model.Text,
-            ImageUrl = model.ImageUrl ?? "images/folder.png", // Добавьте поле для ввода URL изображения
+            ImageUrl = model.ImageUrl ?? "images/folder2.png", // Добавьте поле для ввода URL изображения
             User = user,
         };
 

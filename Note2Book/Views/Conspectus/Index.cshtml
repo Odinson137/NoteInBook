@@ -13,7 +13,7 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
 <div class="container">
-    <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Мои Папки</h2>
+    <h2 class="text-center my-4 book-list-heading">Мои Папки</h2>
 
     <!-- Кнопка для создания новой папки -->
     <div class="text-right mb-4">
@@ -23,56 +23,56 @@
     <!-- Слайдер для папок -->
     @if (Model.Folders != null)
     {
-        <div class="folder-slider">
-            @foreach (var folder in Model.Folders)
-            {
-                <div class="slider-item">
-                    <!-- Карточка с ховером и тенью -->
-                    <div class="card h-100 d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); width: 95%; height: 400px;">
-                        <!-- Ссылка на верхнюю часть карточки -->
-                        <a href="@Url.Action("Index", "Note", new { folderId = folder.Id })" class="text-decoration-none" style="flex-grow: 1;">
-                            <div class="card-body text-center">
-                                <img class="card-img-top mx-auto mt-3" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 120px; width: 120px; object-fit: cover; margin-bottom: 30px">
-                                <h5 class="card-title" style="color: #283C63; font-size: 1.25rem; font-weight: bold;">@folder.Text</h5>
-                                <p class="card-text" style="color: #555; font-size: 0.9rem;">
-                                    <strong>Дата создания:</strong> @folder.CreatedAt.ToString("dd MMM yyyy") <br/>
-                                    <strong>Количество документов:</strong> @folder.Notes.Count
-                                </p>
-                            </div>
-                        </a>
-                        <!-- Кнопка удаления папки внизу карточки -->
-                        <div class="card-footer text-center" style="background: transparent; border: none; margin-bottom: 15px">
-                            <button class="btn btn-lg delete-folder-btn" onclick="confirmDelete('@folder.Id')">Удалить папку</button>
-                        </div>
-                    </div>
+    <div class="folder-slider">
+        @foreach (var folder in Model.Folders)
+        {
+    <div class="slider-item">
+        <!-- Карточка с ховером и тенью -->
+        <div class="card h-100 d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; width: 95%; height: 400px;">
+            <!-- Ссылка на верхнюю часть карточки -->
+            <a href="@Url.Action("Index", "Note", new { folderId = folder.Id })" class="text-decoration-none" style="flex-grow: 1;">
+                <div class="card-body text-center">
+                    <img class="card-img-top mx-auto mt-3" src="@folder.ImageUrl" alt="Image for @folder.Text" style="height: 120px; width: 120px; object-fit: cover; margin-bottom: 30px">
+                    <h5 class="card-title" style="color: #4B0082; font-size: 1.3rem; font-weight: bold;">@folder.Text</h5>
+                    <p class="card-text" style="color: #555; font-size: 0.9rem;">
+                        <strong>Дата создания:</strong> @folder.CreatedAt.ToString("dd MMM yyyy") <br/>
+                        <strong>Количество документов:</strong> @folder.Notes.Count
+                    </p>
                 </div>
-            }
+            </a>
+            <!-- Кнопка удаления папки внизу карточки -->
+            <div class="card-footer text-center" style="background: transparent; border: none; margin-bottom: 15px">
+                <button class="btn btn-lg delete-folder-btn" onclick="confirmDelete('@folder.Id')">Удалить папку</button>
+            </div>
+        </div>
+    </div>
+        }
         </div>
     }
 
     @if (Model.Books != null && Model.Books.Any())
     {
-        <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Мои Цитаты</h2>
+    <h2 class="text-center my-4 book-list-heading">Мои Цитаты</h2>
 
-        <div class="folder-slider">
-            @foreach (var bookGroup in Model.Books)
-            {
-                var book = bookGroup.Key; 
-                <div class="slider-item">
-                    <div class="card h-100 d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; background: linear-gradient(135deg, #e0c3fc, #8ec5fc); width: 95%; height: 300px;">
-                        <a href="@Url.Action("List", "Note", new { bookId = book.Id })" class="text-decoration-none" style="flex-grow: 1;">
-                            <div class="card-body text-center">
-                                <img class="card-book-img-top mx-auto mt-3" src="@book.Image" alt="Image for @book.Title" style="height: 180px; width: 120px; object-fit: cover;">
-                                <h5 class="card-title" style="color: #283C63; font-size: 1.25rem; font-weight: bold;">@book.Title</h5>
-                                <p class="card-text" style="color: #555; font-size: 0.9rem;">
-                                    <strong>Количество цитат:</strong> @bookGroup.Count()
-                                </p>
-                            </div>
-                        </a>
-                    </div>
+    <div class="folder-slider">
+        @foreach (var bookGroup in Model.Books)
+        {
+        var book = bookGroup.Key;
+    <div class="slider-item">
+        <div class="card h-100 d-flex flex-column justify-content-between" style="transition: transform 0.3s ease; border-radius: 15px; width: 95%; height: 300px;">
+            <a href="@Url.Action("List", "Note", new { bookId = book.Id })" class="text-decoration-none" style="flex-grow: 1;">
+                <div class="card-body text-center">
+                    <img class="card-book-img-top mx-auto mt-3" src="@book.Image" alt="Image for @book.Title" style="height: 180px; width: 130px; object-fit: cover;">
+                    <h5 class="card-title" style="color: #4B0082; font-size: 1.3rem; font-weight: bold;">@book.Title</h5>
+                    <p class="card-text" style="color: #555; font-size: 0.9rem;">
+                        <strong>Количество цитат:</strong> @bookGroup.Count()
+                    </p>
                 </div>
-            }
+            </a>
         </div>
+    </div>
+        }
+    </div>
     }
 
 </div>
@@ -80,8 +80,8 @@
 <!-- Скрипт для подтверждения удаления -->
 <script>
     function confirmDelete(folderId) {
-        if (confirm("Вы уверены, что хотите удалить эту папку?")) {
-            window.location.href = '@Url.Action("Delete", "Conspectus")/' + folderId;
+    if (confirm("Вы уверены, что хотите удалить эту папку?")) {
+        window.location.href = '@Url.Action("Delete", "Conspectus")/' + folderId;
         }
     }
 
@@ -116,15 +116,15 @@
 <!-- Стили -->
 <style>
     body {
-        background-color: #F8F9FA;
-        font-family: 'Nunito', sans-serif;
+        background-color: #F9F8FC; /* Светлый фон */
+        font-family: 'Lora', serif; /* Шрифт Lora */
     }
 
     h2 {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
+        font-family: 'Lora', serif;
+        font-weight: 700; /* Более жирное начертание */
         font-size: 2.5rem;
-        color: #6A0dad;
+        color: #3D2765; /* Тот же темный фиолетовый цвет */
         text-transform: uppercase;
         letter-spacing: 2px;
         margin-bottom: 30px;
@@ -132,21 +132,23 @@
         display: inline-block;
         text-align: center;
         width: 100%; /* Заголовок по центру */
+        
+
     }
 
     h2::after {
         content: '';
         position: absolute;
-        width: 50%;  /* Уменьшено до 50% */
+        width: 50%;
         height: 4px;
-        background-color: #9B59b6;
+        background-color: #A185D3; /* Тот же фиолетовый оттенок */
         bottom: -10px;
-        left: 25%;  /* Сдвинуть влево для выравнивания */
+        left: 25%; /* Сдвинуть влево для выравнивания */
         border-radius: 2px;
     }
 
     .card {
-        border: none;
+        
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         padding: 10px;
         display: flex;
@@ -154,6 +156,9 @@
         border-radius: 15px;
         width: 95%;
         height: 300px;
+        background-color: #fff; /* Белый фон для карточки */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        border: none;
     }
 
     .card-footer {
@@ -170,15 +175,29 @@
 
     .card-title {
         margin-bottom: 10px;
+        font-family: 'Lora', serif;
+        color: #4B0082; /* Тот же фиолетовый цвет */
     }
 
     .btn-lg {
         font-size: 0.9rem;
         transition: background-color 0.3s ease;
+        background-color: #A185D3; /* Лаванда */
+        color: white;
+        border-radius: 10px;
+        padding: 12px 24px;
+        border: none;
+        font-family: 'Lora', serif; /* Шрифт Lora */
+        font-weight: bold;
+    }
+
+    .btn-lg:hover {
+        background-color: rgba(161, 133, 211, 0.7);
+        color: white;
     }
 
     .create-folder-btn {
-        background-color: #8EC5FC;
+        background-color: #A185D3; /* Лаванда */
         color: white;
         border-radius: 10px;
         padding: 10px 20px;
@@ -186,19 +205,19 @@
     }
 
     .create-folder-btn:hover {
-        background-color: #4B0082;
+        background-color: rgba(161, 133, 211, 0.7);
         color: white;
     }
 
     .delete-folder-btn {
-        background-color: #4B0082;
+        background-color: #6A0AAD; /* Темный фиолетовый */
         color: white;
         border-radius: 10px;
         border: none;
     }
 
     .delete-folder-btn:hover {
-        background-color: #7DB9E8;
+        background-color: #8A2BE2; /* Лаванда */
         color: white;
     }
 
@@ -208,20 +227,15 @@
         width: 120px;
     }
 
-    .card:hover .card-img-top {
-        transform: rotate(10deg);
-    }
-
-    .card-book-img-top{
+  
+    .card-book-img-top {
         transition: transform 0.3s ease;
         height: 120px;
         width: 120px;
     }
-    
-    .card:hover .card-book-img-top {
-        transform: rotate(-10deg);
-    }
-    
+
+  
+
     .folder-slider {
         width: 100%;
         margin: 0 auto;
@@ -237,10 +251,11 @@
         height: 100%;
         min-height: 300px;
     }
+    
 
     /* Slick Slider */
     .slick-prev:before,
     .slick-next:before {
-        color: #4B0082; /* Цвет стрелок слайдера */
+        color: #6A0AAD; /* Цвет стрелок слайдера */
     }
 </style>

@@ -219,11 +219,15 @@
 </script>
 
 <style>
+    body {
+        font-family: 'Lora', serif; /* Установим шрифт Lora для всего тела */
+    }
+
     .chapter-reading {
         max-width: 800px;
         margin: 0 auto;
         padding: 20px;
-        background-color: #fff;
+        background-color: #ffffff;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         text-align: justify;
@@ -237,7 +241,7 @@
     }
 
     .btn-info.return-btn {
-        background-color: #6A5ACD;
+        background-color: #A185D3; /* Светлый фиолетовый */
         border: none; 
         color: white;
         text-decoration: none;
@@ -247,7 +251,7 @@
     }
 
     .btn-info.return-btn:hover {
-        background-color: #4B0082;;
+        background-color: #6A0AAD; /* Темнее фиолетовый */
     }
 
     .highlighted-quote {
@@ -262,8 +266,6 @@
         background-color: rgba(138, 43, 226, 0.5);
     }
 
-    
-
     #quoteCommentModal .modal-body {
         padding: 20px;
     }
@@ -274,12 +276,12 @@
     }
 
     #quoteCommentModal .btn-danger {
-        background-color: #d9534f;
-        border-color: #d43f3a;
+        background-color: #FF6F61; /* Красный */
+        border-color: #D54E42;
     }
 
     #quoteCommentModal .btn-danger:hover {
-        background-color: #c9302c;
+        background-color: #FF3D2E;
     }
 
     .navigation-buttons {
@@ -287,58 +289,57 @@
         justify-content: space-between;
         margin-top: 20px;
     }
+
     .btn-primary {
-        background-color: #4B0082; /* Индиго */
+        background-color: #6A0AAD; /* Фиолетовый */
         border: none;
-        
     }
 
     .btn-primary:hover {
-        background-color: #3A006F; /* Темнее индиго */
-        color: white; /* Цвет текста при наведении */
+        background-color: #4B0082; /* Темный индиго */
+        color: white;
     }
 
     .btn-success {
-        background-color: #6A5ACD; /* Фиолетовый */
+        background-color: #A185D3; /* Лаванда */
         border: none;
     }
 
     .btn-success:hover {
-        background-color: #483D8B; /* Темнее фиолетовый */
-        color: white; /* Цвет текста при наведении */
+        background-color: #6A5ACD; /* Темный фиолетовый */
+        color: white;
     }
 
     .btn-secondary {
-        background-color: #808080; /* Серый */
+        background-color: #B0BEC5; /* Светло-серый */
         border: none;
     }
 
     .btn-secondary:hover {
-        background-color: #696969; /* Темнее серый */
-        color: white; /* Цвет текста при наведении */
+        background-color: #90A4AE; /* Темнее серый */
+        color: white;
     }
 
-    /* Общие стили для модальных окон */
     .modal-content {
-        background-color: #f9f9f9;
+        background-color: #FAF9FC; /* Светлый фон */
         border-radius: 8px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     .modal-header {
-        background-color: #6c757d;
+        background-color: #6A0AAD; /* Фиолетовый */
         color: #fff;
         border-bottom: 1px solid #dee2e6;
     }
 
     .modal-title {
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Lora', serif;
         font-size: 1.25rem;
     }
 
     .modal-body label {
         font-weight: bold;
-        color: #343a40;
+        color: #3A1A65; /* Темный фиолетовый */
     }
 
     .modal-body textarea {
@@ -346,7 +347,7 @@
         padding: 10px;
         border-radius: 5px;
         border: 1px solid #ced4da;
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Lora', serif;
         font-size: 1rem;
         resize: none;
     }
@@ -360,40 +361,39 @@
 
     .modal-footer .btn {
         border-radius: 5px;
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Lora', serif;
         padding: 8px 15px;
         font-size: 1rem;
         transition: background-color 0.3s ease;
     }
 
     .modal-footer .btn-primary {
-        background-color: #8a2be2;
+        background-color: #A185D3; /* Лаванда */
         border: none;
     }
 
     .modal-footer .btn-primary:hover {
-        background-color: #6a1bbd;
+        background-color: #6A0AAD; /* Темный фиолетовый */
     }
 
     .modal-footer .btn-secondary {
-        background-color: #6c757d;
+        background-color: #B0BEC5; /* Светло-серый */
         border: none;
     }
 
     .modal-footer .btn-secondary:hover {
-        background-color: #545b62;
+        background-color: #90A4AE; /* Темный серый */
     }
 
     .modal-footer .btn-danger {
-        background-color: #dc3545;
+        background-color: #FF6F61; /* Красный */
         border: none;
     }
 
     .modal-footer .btn-danger:hover {
-        background-color: #c82333;
+        background-color: #FF3D2E;
     }
 
-    /* Стили для кнопки закрытия модального окна */
     .close {
         background-color: transparent;
         border: none;
@@ -404,8 +404,8 @@
     }
 
     .close:hover {
-        color: #f8f9fa;
+        color: #F8F9FA; /* Светлый цвет текста */
     }
-
 </style>
+
 

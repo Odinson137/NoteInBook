@@ -79,10 +79,10 @@
     </div>
     <div id="profile" class="tab-pane @(activeTab == "profile" ? "active-pane" : "hidden-pane")" style="margin-bottom: 50px">
         <div class="profile-container">
-            <h2 style="margin-bottom: 20px">Привет, секси-гёрл @Model.User.Name</h2>
+            <h2 style="margin-bottom: 20px">Привет, @Model.User.Name</h2>
             <form id="profileForm" enctype="multipart/form-data">
                 <div class="profile-image-container">
-                    <img id="profileImage" src='@(string.IsNullOrEmpty(Model.User.ProfileImage) ? "/images/profiles/0c481701-6868-491f-887d-a07684de0d35_photo_2023-04-05_13-34-22.jpg" : Model.User.ProfileImage)' alt="Фото профиля" class="profile-image" />
+                    <img id="profileImage" src='@(string.IsNullOrEmpty(Model.User.ProfileImage) ? "/images/profiles/аватар.jpg" : Model.User.ProfileImage)' alt="Фото профиля" class="profile-image" />
                     <input type="file" id="profileImageInput" name="profileImage" accept="image/*" style="display: none;" />
                     <button type="button" class="upload-button" onclick="document.getElementById('profileImageInput').click()">Изменить фото</button>
                 </div>
@@ -446,19 +446,23 @@
         display: flex;
         gap: 20px;
         justify-content: space-around;
+        margin-bottom: 50px;
+        
     }
 
     .status-column {
         flex: 1;
-        border: 1px solid #ccc;
         border-radius: 5px;
         padding: 10px;
-        background-color: #f9f9f9;
+        background-color: #fff; /* Белый фон для карточки */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        border: none;
     }
 
     .status-column h3 {
         text-align: center;
         color: #333;
+        
     }
 
     .book-list {
@@ -479,14 +483,14 @@
         background-color: #ccc;
     }
 
-     .profile-container {
-         max-width: 600px;
-         margin: 0 auto;
-         padding: 20px;
-         background-color: #fff;
-         border-radius: 10px;
-         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-     }
+    .profile-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
     .profile-image-container {
         text-align: center;
@@ -533,6 +537,12 @@
         border-radius: 5px;
     }
 
+    .form-group input:focus {
+        border-color: #4B0082;
+        box-shadow: none;
+        outline: none;
+    }
+
     .save-button {
         display: block;
         width: 100%;
@@ -547,4 +557,5 @@
     .save-button:hover {
         background-color: #5a0a9d;
     }
+
 </style>

@@ -6,72 +6,101 @@ Layout = "_Layout";
 }
 
 <div class="container">
-    <h2 class="text-center my-4 display-4" style="color: #4B0082;">Создать новую папку</h2>
+    <h2 class="text-center my-4 display-4">СОЗДАТЬ НОВУЮ ПАПКУ</h2>
 
     <form asp-action="Create" method="post" id="formochka">
         <div class="form-group">
-            <label for="Text" style="color: #283C63; font-size: 1.2rem;">Название папки</label>
-            <input type="text" class="form-control" id="Text" name="Text" required style="border-radius: 10px; padding: 10px; font-size: 1rem; border: 2px solid #8EC5FC;" />
+            <label for="Text" style>Название папки</label>
+            <input type="text" class="form-control" id="Text" name="Text" required/>
         </div>
         <div class="form-group">
-            <label for="ImageUrl" style="color: #283C63; font-size: 1.2rem;">URL изображения (опционально)</label>
-            <input type="url" class="form-control" id="ImageUrl" name="ImageUrl" style="border-radius: 10px; padding: 10px; font-size: 1rem; border: 2px solid #8EC5FC;" />
+            <label for="ImageUrl">URL изображения (опционально)</label>
+            <input type="url" class="form-control" id="ImageUrl" name="ImageUrl" />
         </div>
 
         <button type="submit" class="btn btn-lg create-folder-btn mt-3">Создать папку</button>
     </form>
 </div>
 
-<!-- Стили -->
 <style>
     body {
-        background-color: #F8F9FA;
-        font-family: 'Nunito', sans-serif;
+        background-color: #F9F8FC;
+        font-family: 'Lora', serif;
     }
 
-    .container {
-        margin-top: 50px;
-    }
-
-    #formochka {
-        width: 600px;
-        justify-self: center;
-    }
 
     h2 {
         font-weight: 700;
-        letter-spacing: 1px;
+        text-align: center;
         margin-bottom: 40px;
+        font-size: 2.5rem !important;
+        font-family: 'Lora', serif;
+        color: #3D2765;
+             
+        position: relative;
+        display: inline-block;
+       
+        width: 100%;
+    }
+
+    h2::after {
+        content: '';
+        position: absolute;
+        width: 50%;
+        height: 4px;
+        background-color: #A185D3;
+        bottom: -10px;
+        left: 25%;
+        border-radius: 2px;
+    }
+
+    #formochka {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    label {
+        color: #283C63;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
     }
 
     .form-control {
-        font-family: 'Nunito', sans-serif;
+        font-family: 'Lora', serif;
         padding: 15px;
         border-radius: 10px;
-        border: 2px solid #8EC5FC;
+        font-size: 1rem;
+        border: 2px solid #A185D3;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #4B0082;
+        box-shadow: none;
+        outline: none;
     }
 
     .btn-lg {
         font-size: 1rem;
-        padding: 10px 20px;
+        padding: 12px 24px;
         border-radius: 10px;
+        font-weight: bold;
+        font-family: 'Lora', serif;
         transition: background-color 0.3s ease;
     }
 
     .create-folder-btn {
-        background-color: #8EC5FC;
+        background-color: #A185D3;
         color: white;
         border: none;
     }
 
     .create-folder-btn:hover {
-        background-color: #4B0082;
+        background-color: rgba(161, 133, 211, 0.7);
         color: white;
     }
-
-    label {
-        color: #283C63;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
 </style>
+
+

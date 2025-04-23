@@ -99,8 +99,8 @@
 
 <style>
     body {
-        background-color: #F0F4F8;
-        font-family: 'Nunito', sans-serif;
+        background-color: #F9F8FC;
+        font-family: 'Lora', serif;
         color: #333;
         margin: 0;
         padding: 0;
@@ -118,12 +118,12 @@
         background-color: #ffffff;
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 40px; /* Увеличен padding для всего блока */
+        padding: 40px;
     }
 
     .book-header {
         width: 100%;
-        margin-bottom: 40px; /* Увеличено расстояние внизу блока */
+        margin-bottom: 40px;
         display: flex;
         align-items: flex-start;
     }
@@ -132,7 +132,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-right: 40px; /* Увеличен отступ между изображением и текстом */
+        margin-right: 40px;
     }
 
     .book-image {
@@ -140,19 +140,19 @@
         height: auto;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px; /* Добавлен отступ снизу от картинки */
+        margin-bottom: 20px;
     }
 
     .download-buttons {
         display: flex;
         flex-direction: column;
-        gap: 20px; /* Увеличено расстояние между кнопками */
-        margin-top: 20px; /* Увеличен отступ сверху для кнопок */
+        gap: 20px;
+        margin-top: 20px;
         width: 100%;
     }
 
     .btn-download {
-        background-color: #FF4500;
+        background-color: #A185D3; /* Обновлено на нужный цвет */
         color: white;
         border: none;
         padding: 10px 20px;
@@ -164,7 +164,7 @@
     }
 
     .btn-download:hover {
-        background-color: #E03A00;
+        background-color: rgba(161, 133, 211, 0.7); /* Обновлено на нужный цвет */
         transform: scale(1.05);
     }
 
@@ -174,16 +174,16 @@
     }
 
     .book-info h1 {
-        color: #4B0082;
-        font-family: 'Poppins', sans-serif;
+        color: #3D2765; /* Обновлено на нужный цвет */
+        font-family: 'Lora', serif;
         font-size: 2.5rem;
         margin-bottom: 20px;
     }
 
     .book-info h3, .book-info h4, .book-info h5 {
-        color: #4B0082;
+        color: #3D2765; /* Обновлено на нужный цвет */
         margin-top: 20px;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Lora', serif;
     }
 
     .book-info ul {
@@ -215,7 +215,7 @@
     }
 
     .btn-primary {
-        background-color: #4B0082;
+        background-color: #A185D3; /* Обновлено на нужный цвет */
         color: white;
         border: none;
         padding: 8px 16px;
@@ -228,7 +228,7 @@
     }
 
     .btn-primary:hover {
-        background-color: #6a0dad;
+        background-color: rgba(161, 133, 211, 0.7); /* Обновлено на нужный цвет */
         transform: scale(1.05);
     }
 
@@ -262,7 +262,7 @@
     }
 
     .comment-form button {
-        background-color: #4B0082;
+        background-color: #A185D3; /* Обновлено на нужный цвет */
         color: white;
         border: none;
         padding: 10px 20px;
@@ -273,7 +273,7 @@
     }
 
     .comment-form button:hover {
-        background-color: #6a0dad;
+        background-color: rgba(161, 133, 211, 0.7); /* Обновлено на нужный цвет */
     }
 
     .status-buttons {
@@ -281,19 +281,21 @@
     }
 
     .btn-status {
-        background-color: #4B0082;
+        background-color: #A185D3; /* Обновлено на нужный цвет */
         color: white;
         border: none;
         padding: 10px 20px;
         border-radius: 8px;
-        font-size: 1rem;: pointer;
+        font-size: 1rem;
         transition: background-color 0.3s ease;
     }
 
     .btn-status:hover {
-        background-color: #6a0dad;
+        background-color: rgba(161, 133, 211, 0.7); /* Обновлено на нужный цвет */
+        color: white;
     }
 </style>
+
 
 <script>
     document.getElementById('submitComment').addEventListener('click', function () {

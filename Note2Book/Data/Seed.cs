@@ -628,7 +628,7 @@ public class Seed
         {
             User = user1,
             Text = "Личное",
-            ImageUrl = "images/folder.png",
+            ImageUrl = "images/folder2.png",
             Notes = new List<Note>
             {
                 note1, 
@@ -638,7 +638,7 @@ public class Seed
         {
             User = user2,
             Text = "Личное",
-            ImageUrl = "images/folder.png",
+            ImageUrl = "images/folder2.png",
             Notes = new List<Note>
             {
                 note2,
@@ -649,7 +649,7 @@ public class Seed
         {
             User = user1,
             Text = "Конспекты",
-            ImageUrl = "images/folder.png",
+            ImageUrl = "images/folder2.png",
             Notes = new List<Note>
             {
                 note2,

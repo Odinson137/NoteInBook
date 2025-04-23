@@ -1,43 +1,43 @@
 ﻿@model Note2Book.ViewModels.RegisterViewModel
 
 @{
-ViewBag.Title = "Регистрация";
-Layout = "_Layout";
+    ViewBag.Title = "Регистрация";
+    Layout = "_Layout";
 }
 
 <div class="container">
-    <h2 class="text-center my-4" style="color: #4B0082; font-size: 2.5rem;">Регистрация</h2>
+    <h2 class="text-center my-4" style="font-size: 2.5rem; font-weight: bold;">РЕГИСТРАЦИЯ</h2>
 
     <div class="row mb-4">
         <div class="col-md-6 mx-auto">
-            <form asp-action="Register" method="post" class="shadow-lg p-4" style="background: linear-gradient(135deg, #e0c3fc, #8ec5fc); border-radius: 15px;">
+            <form asp-action="Register" method="post" class="shadow-lg p-4" style="background-color: #fff; border-radius: 15px;">
 
                 <div class="form-group mb-3">
-                    <label asp-for="Name" class="form-label" style="color: #283C63; font-weight: bold;">Имя</label>
-                    <input asp-for="Name" class="form-control" style="border-radius: 10px;" />
+                    <label asp-for="Name" class="form-label">Имя</label>
+                    <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="Login" class="form-label" style="color: #283C63; font-weight: bold;">Логин</label>
-                    <input asp-for="Login" class="form-control" style="border-radius: 10px;" />
+                    <label asp-for="Login" class="form-label">Логин</label>
+                    <input asp-for="Login" class="form-control" />
                     <span asp-validation-for="Login" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="Password" class="form-label" style="color: #283C63; font-weight: bold;">Пароль</label>
-                    <input asp-for="Password" type="password" class="form-control" style="border-radius: 10px;" />
+                    <label asp-for="Password" class="form-label">Пароль</label>
+                    <input asp-for="Password" type="password" class="form-control" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-4">
-                    <label asp-for="RepeatPassword" class="form-label" style="color: #283C63; font-weight: bold;">Повторите пароль</label>
-                    <input asp-for="RepeatPassword" type="password" class="form-control" style="border-radius: 10px;" />
+                    <label asp-for="RepeatPassword" class="form-label">Повторите пароль</label>
+                    <input asp-for="RepeatPassword" type="password" class="form-control" />
                     <span asp-validation-for="RepeatPassword" class="text-danger"></span>
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-lg" style="background-color: #4B0082; color: white; border-radius: 10px; padding: 10px 20px;">Зарегистрироваться</button>
+                    <button type="submit" class="btn btn-lg">Зарегистрироваться</button>
                 </div>
             </form>
         </div>
@@ -46,8 +46,63 @@ Layout = "_Layout";
 
 <!-- Стили -->
 <style>
+    body {
+        font-family: 'Lora', serif;
+        background-color: #f9f8fc;
+        color: #333;
+    }
+
     .form-label {
         font-weight: bold;
-        color: #4B0082;
+        color: #3D2765 !important;
+    }
+
+    .form-control {
+        font-family: 'Lora', serif;
+        border-radius: 10px;
+        background-color: #fff; /* Белый фон для формы */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ccc;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #7e57c2; /* Цвет фокуса */
+        box-shadow: 0 0 8px rgba(126, 87, 194, 0.3);
+    }
+
+    .btn {
+        background-color: #A185D3;
+        color: #fff;
+        border-radius: 10px;
+        padding: 12px 24px;
+        font-family: 'Lora', serif;
+        font-weight: bold;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: rgba(161, 133, 211, 0.7);
+        color: #fff;
+        transform: scale(1.05);
+    }
+
+    .shadow-lg {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-danger {
+        color: #d9534f !important;
+    }
+
+    h2 {
+       
+        color: #3D2765;
+       
+        font-family: 'Lora', serif; 
+        font-weight: 700; 
+        font-size: 2.5rem;
+      
     }
 </style>

@@ -122,15 +122,17 @@
 
 <!-- Стили -->
 <style>
+    /* Основной контейнер */
     .container {
         max-width: 1200px;
     }
 
+    /* Заголовок */
     h2 {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
+        font-family: 'Lora', serif; /* Используем шрифт Lora */
+        font-weight: 700; /* Более жирное начертание */
         font-size: 2.5rem;
-        color: #6A0dad; 
+        color: #3D2765; /* Тот же темный фиолетовый цвет */
         text-transform: uppercase;
         letter-spacing: 2px;
         margin-bottom: 30px;
@@ -145,18 +147,20 @@
         position: absolute;
         width: 50%;  /* Уменьшено до 50% */
         height: 4px;
-        background-color: #9B59b6; 
+        background-color: #A185D3; /* Тот же фиолетовый оттенок */
         bottom: -10px;
         left: 25%;  /* Сдвинуть влево для выравнивания */
         border-radius: 2px;
     }
 
+    /* Карточка с книгой */
     .card {
         border: 1px solid #ddd;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease;
         padding: 30px;
         position: relative;
+        border-radius: 15px; /* Закругленные углы */
     }
 
     .card:hover {
@@ -168,46 +172,70 @@
         border-radius: 15px 15px 0 0;
     }
 
+    /* Кнопка с большими размерами */
     .btn-lg {
         font-size: 1rem;
-        padding: 10px 30px;
+        padding: 12px 24px;
+        background-color: #A185D3; /* Тот же цвет кнопок */
+        color: white;
+        border-radius: 10px;
+        border: none;
+        font-family: 'Lora', serif; /* Шрифт Lora */
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
-    /* Стили для строки поиска */
+    .btn-lg:hover {
+        background-color: rgba(161, 133, 211, 0.7);
+        color: white;
+        transform: scale(1.05);
+    }
+
+    /* Стиль для строки поиска */
     .form-control {
         padding: 12px;
         font-size: 1.1rem;
-        border: 1px solid #4B0082;
+        font-family: 'Lora', serif; /* Шрифт Lora */
+        border: 1px solid #7e57c2; /* Цвет фокуса в поле */
         border-radius: 10px;
+    }
+    .form-control:focus {
+        border-color: #7e57c2; /* Цвет фокуса (фиолетовый) */
+        box-shadow: 0 0 8px rgba(126, 87, 194, 0.3); /* Легкое свечение вокруг поля */
+        outline: none; /* Убираем стандартный фокусный контур */
     }
 
     .input-group .btn {
         padding: 12px 20px;
-        background-color: #4B0082;
+        background-color: #A185D3; /* Тот же цвет кнопки */
         color: white;
         font-size: 1.1rem;
         border-radius: 10px;
         border: none;
+        font-family: 'Lora', serif; /* Шрифт Lora */
+        font-weight: bold;
     }
 
     .input-group .btn:hover {
-        background-color: #8EC5FC;
+        background-color: rgba(161, 133, 211, 0.7);
         color: white;
     }
 
     /* Кнопка Подробнее с теми же стилями, что и кнопка Поиск */
     .unified-btn {
         padding: 12px 20px;
-        background-color: #4B0082;
+        background-color: #A185D3; /* Тот же цвет кнопки */
         color: white;
         font-size: 1.1rem;
         border-radius: 10px;
         border: none;
+        font-family: 'Lora', serif; /* Шрифт Lora */
+        font-weight: bold;
         transition: background-color 0.3s ease;
     }
 
     .unified-btn:hover {
-        background-color: #8EC5FC;
+        background-color: rgba(161, 133, 211, 0.7);
         color: white;
     }
 
@@ -236,3 +264,4 @@
         text-align: justify;
     }
 </style>
+
