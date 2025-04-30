@@ -11,4 +11,6 @@ public class User : BaseModel
     public string? ProfileImage { get; set; }
     
     public List<Book> Books { get; set; }
+    
+    public List<Chat> Chats { get; set; }
 }

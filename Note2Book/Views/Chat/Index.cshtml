@@ -1,0 +1,375 @@
+﻿@model IEnumerable<Note2Book.Models.Chat>
+
+@{
+ViewData["Title"] = "Мессенджер";
+var selectedChatId = ViewBag.SelectedChatId;
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Список чатов -->
+        <div class="col-md-4 col-lg-3 bg-light border-end">
+            <div class="p-3">
+                <h4>Мессенджер</h4>
+                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createChatModal">Создать чат</button>
+                <div id="chatList">
+                    @foreach (var chat in Model)
+                    {
+                    <div class="chat-item p-2 mb-2 border rounded @(chat.Id == selectedChatId ? "bg-primary text-white" : "bg-white")" data-chat-id="@chat.Id">
+                        <strong>@chat.Title</strong>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary edit-chat-btn" data-bs-toggle="modal" data-bs-target="#editChatModal" data-chat-id="@chat.Id" data-chat-title="@chat.Title" data-chat-description="@chat.Description">Редактировать</button>
+                            <button class="btn btn-sm btn-outline-danger delete-chat-btn" data-chat-id="@chat.Id">Удалить</button>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Область сообщений -->
+        <div class="col-md-8 col-lg-9 p-3">
+            @if (Model.Any(c => c.Id == selectedChatId))
+            {
+            var selectedChat = Model.First(c => c.Id == selectedChatId);
+            <h4>@selectedChat.Title</h4>
+            <div>
+                <strong>Участники:</strong> @string.Join(", ", selectedChat.ChatMembers.Select(u => u.Name))
+                <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addUserModal" data-chat-id="@selectedChat.Id">Добавить пользователя</button>
+            </div>
+            <div id="chatMessages" style="height: 500px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-top: 10px;">
+                @foreach (var message in selectedChat.Messages.OrderBy(m => m.CreatedAt))
+                {
+                <div>
+                    <strong>@message.User.Name</strong> (@message.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")): @message.Text
+                </div>
+                }
+            </div>
+            <div class="input-group mt-3">
+                <input type="text" id="messageInput" class="form-control" placeholder="Введите сообщение...">
+                <button class="btn btn-primary" onclick="sendMessage()">Отправить</button>
+            </div>
+            }
+            else
+            {
+            <p>Выберите чат для просмотра сообщений.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для создания чата -->
+<div class="modal fade" id="createChatModal" tabindex="-1" aria-labelledby="createChatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createChatModalLabel">Создать чат</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="chatTitle" class="form-label">Название чата</label>
+                    <input type="text" class="form-control" id="chatTitle" placeholder="Введите название">
+                </div>
+                <div class="mb-3">
+                    <label for="chatDescription" class="form-label">Описание (опционально)</label>
+                    <textarea class="form-control" id="chatDescription" placeholder="Введите описание"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" onclick="createChat()">Создать</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования чата -->
+<div class="modal fade" id="editChatModal" tabindex="-1" aria-labelledby="editChatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editChatModalLabel">Редактировать чат</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="editChatTitle" class="form-label">Название чата</label>
+                    <input type="text" class="form-control" id="editChatTitle" placeholder="Введите название">
+                </div>
+                <div class="mb-3">
+                    <label for="editChatDescription" class="form-label">Описание (опционально)</label>
+                    <textarea class="form-control" id="editChatDescription" placeholder="Введите описание"></textarea>
+                </div>
+                <input type="hidden" id="editChatId">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" onclick="editChat()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для добавления пользователя -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Добавить пользователя</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Имя пользователя</label>
+                    <input type="text" class="form-control" id="username" placeholder="Введите имя">
+                </div>
+                <input type="hidden" id="addUserChatId">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" onclick="addUser()">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .withAutomaticReconnect()
+        .build();
+
+    let selectedChatId = @selectedChatId;
+
+    // Подключение к SignalR
+    connection.start()
+        .then(() => {
+            console.log("Подключено к SignalR");
+            if (selectedChatId > 0) {
+                connection.invoke("JoinChat", selectedChatId).catch(err => console.error(err));
+            }
+        })
+        .catch(err => console.error("Ошибка подключения: ", err));
+
+    // Получение сообщения
+    connection.on("ReceiveMessage", (user, message, timestamp) => {
+        if (selectedChatId > 0) {
+            const msgDiv = document.createElement("div");
+            msgDiv.innerHTML = `<strong>${user}</strong> (${timestamp}): ${message}`;
+            document.getElementById("chatMessages").appendChild(msgDiv);
+            document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
+        }
+    });
+
+    // Чат создан
+    connection.on("ChatCreated", (chatId, title) => {
+        const chatItem = document.createElement("div");
+        chatItem.className = `chat-item p-2 mb-2 border rounded bg-white`;
+        chatItem.dataset.chatId = chatId;
+        chatItem.innerHTML = `
+                <strong>${title}</strong>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary edit-chat-btn" data-bs-toggle="modal" data-bs-target="#editChatModal" data-chat-id="${chatId}" data-chat-title="${title}">Редактировать</button>
+                    <button class="btn btn-sm btn-outline-danger delete-chat-btn" data-chat-id="${chatId}">Удалить</button>
+                </div>`;
+        document.getElementById("chatList").appendChild(chatItem);
+    });
+
+    // Пользователь добавлен
+    connection.on("UserAdded", (username) => {
+        if (selectedChatId > 0) {
+            const userList = document.querySelector("#chatMessages").previousElementSibling;
+            userList.innerHTML = `<strong>Участники:</strong> ${userList.textContent.split(": ")[1] + ", " + username}
+                    <button class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addUserModal" data-chat-id="${selectedChatId}">Добавить пользователя</button>`;
+        }
+    });
+
+    // Чат обновлён
+    connection.on("ChatUpdated", (chatId, title) => {
+        const chatItem = document.querySelector(`.chat-item[data-chat-id="${chatId}"]`);
+        if (chatItem) {
+            chatItem.querySelector("strong").textContent = title;
+            chatItem.querySelector(".edit-chat-btn").dataset.chatTitle = title;
+            if (selectedChatId === chatId) {
+                document.querySelector("#chatMessages").previousElementSibling.previousElementSibling.textContent = title;
+            }
+        }
+    });
+
+    // Чат удалён
+    connection.on("ChatDeleted", (chatId) => {
+        const chatItem = document.querySelector(`.chat-item[data-chat-id="${chatId}"]`);
+        if (chatItem) {
+            chatItem.remove();
+            if (selectedChatId === chatId) {
+                selectedChatId = 0;
+                document.getElementById("chatMessages").innerHTML = "";
+                document.getElementById("chatMessages").previousElementSibling.innerHTML = "<p>Выберите чат для просмотра сообщений.</p>";
+            }
+        }
+    });
+
+    // Отправка сообщения
+    function sendMessage() {
+        const message = document.getElementById("messageInput").value;
+        if (message.trim() !== "" && selectedChatId > 0) {
+            connection.invoke("SendMessage", selectedChatId, message).catch(err => console.error(err));
+            document.getElementById("messageInput").value = "";
+        }
+    }
+
+    // Обработка Enter
+    document.getElementById("messageInput")?.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    // Создание чата
+    function createChat() {
+        const title = document.getElementById("chatTitle").value;
+        const description = document.getElementById("chatDescription").value;
+        if (title.trim() === "") {
+            alert("Название чата обязательно.");
+            return;
+        }
+
+        fetch("/Chat/CreateChat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, description })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("chatTitle").value = "";
+                    document.getElementById("chatDescription").value = "";
+                    bootstrap.Modal.getInstance(document.getElementById("createChatModal")).hide();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    // Редактирование чата
+    function editChat() {
+        const chatId = parseInt(document.getElementById("editChatId").value);
+        const title = document.getElementById("editChatTitle").value;
+        const description = document.getElementById("editChatDescription").value;
+        if (title.trim() === "") {
+            alert("Название чата обязательно.");
+            return;
+        }
+
+        fetch("/Chat/EditChat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chatId, title, description })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    bootstrap.Modal.getInstance(document.getElementById("editChatModal")).hide();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    // Удаление чата
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("delete-chat-btn")) {
+            const chatId = parseInt(e.target.dataset.chatId);
+            if (confirm("Вы уверены, что хотите удалить этот чат?")) {
+                fetch("/Chat/DeleteChat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ chatId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+        }
+    });
+
+    // Добавление пользователя
+    function addUser() {
+        const chatId = parseInt(document.getElementById("addUserChatId").value);
+        const username = document.getElementById("username").value;
+        if (username.trim() === "") {
+            alert("Имя пользователя обязательно.");
+            return;
+        }
+
+        fetch("/Chat/AddUserToChat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chatId, username })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("username").value = "";
+                    bootstrap.Modal.getInstance(document.getElementById("addUserModal")).hide();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    // Выбор чата
+    document.addEventListener("click", (e) => {
+        const chatItem = e.target.closest(".chat-item");
+        if (chatItem) {
+            const chatId = parseInt(chatItem.dataset.chatId);
+            if (selectedChatId !== chatId) {
+                if (selectedChatId > 0) {
+                    connection.invoke("LeaveChat", selectedChatId).catch(err => console.error(err));
+                }
+                selectedChatId = chatId;
+                connection.invoke("JoinChat", chatId).catch(err => console.error(err));
+                document.querySelectorAll(".chat-item").forEach(item => item.classList.remove("bg-primary", "text-white"));
+                chatItem.classList.add("bg-primary", "text-white");
+                window.location.href = `/Chat/Index?selectedChatId=${chatId}`;
+            }
+        }
+    });
+
+    // Заполнение модального окна редактирования
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("edit-chat-btn")) {
+            document.getElementById("editChatId").value = e.target.dataset.chatId;
+            document.getElementById("editChatTitle").value = e.target.dataset.chatTitle;
+            document.getElementById("editChatDescription").value = e.target.dataset.chatDescription || "";
+        }
+    });
+
+    // Заполнение модального окна добавления
+    document.addEventListener("click", (e) => {
+        if (e.target.dataset.bsTarget === "#addUserModal") {
+            document.getElementById("addUserChatId").value = e.target.dataset.chatId;
+        }
+    });
+
+    // Покинуть чат при закрытии окна
+    window.onbeforeunload = () => {
+        if (selectedChatId > 0) {
+            connection.invoke("LeaveChat", selectedChatId).catch(err => console.error(err));
+        }
+    };
+</script>
+}

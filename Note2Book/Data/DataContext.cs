@@ -14,7 +14,7 @@ public class DataContext : DbContext
             if (!databaseCreator.CanConnect()) databaseCreator.Create();
             if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
         }
-    }   
+    }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -39,4 +39,6 @@ public class DataContext : DbContext
     public DbSet<Citation> Citations { get; set; }
     
     public DbSet<Activity> Activities { get; set; }
+    public DbSet<Chat> Chats { get; set; }
+    public DbSet<Message> Messages { get; set; }
 }

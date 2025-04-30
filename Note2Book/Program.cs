@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Note2Book.Data;
+using Note2Book.Hubs;
 using Note2Book.Interfaces;
 using Note2Book.Services;
 
@@ -34,6 +35,7 @@ services.AddScoped<IElasticService, ElasticService>();
 services.AddScoped<IBookElasticService, BookElasticService>();
 services.AddScoped<IActivityService, ActivityService>();
 services.AddScoped<Seed>();
+services.AddSignalR();
 
 
 var app = builder.Build();
@@ -47,6 +49,8 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(new StaticFileOptions
