@@ -2,12 +2,15 @@
 
 namespace Note2Book.Models;
 
-public class Message : BaseModel
+public class ForumMessage : BaseModel
 {
-    [MaxLength(1000)] public string? Text { get; set; }
+    [Required] public string Text { get; set; }
 
-    [Required] public User? User { get; set; }
+    public int ForumId { get; set; }
+    public Forum Forum { get; set; }
 
-    [Required] public Chat Chat { get; set; } = null!;
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public int UserId { get; set; }
+    public User User { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

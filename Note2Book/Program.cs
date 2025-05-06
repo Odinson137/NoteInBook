@@ -50,7 +50,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.MapHub<ChatHub>("/chatHub");
+app.MapHub<ForumHub>("/forumHub");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(new StaticFileOptions

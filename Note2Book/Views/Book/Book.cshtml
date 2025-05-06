@@ -36,6 +36,7 @@
 
                 <div class="status-buttons">
                     <button id="changeStatus" class="btn btn-status" data-status="WillRead">Will Read</button>
+                    <a href="@Url.Action("Index", "Forum", new { bookId = Model.Id })" class="btn btn-status">Форум</a>
                 </div>
 
                 <h4>Главы</h4>
@@ -57,13 +58,11 @@
 
                 <div class="book-container">
                     <div class="book-details">
-                        <!-- Информация о книге и комментариях -->
-
                         <!-- Форма для добавления комментария -->
                         @if (User.Identity.IsAuthenticated)
                         {
                             <div class="comment-form">
-                                @Html.AntiForgeryToken() <!-- Вставляет CSRF-токен -->
+                                @Html.AntiForgeryToken()
                                 <h4>Оставить комментарий</h4>
                                 <textarea id="commentText" placeholder="Напишите ваш комментарий..."
                                           rows="4"></textarea>
@@ -91,7 +90,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -152,7 +150,7 @@
     }
 
     .btn-download {
-        background-color: #A185D3; /* Обновлено на нужный цвет */
+        background-color: #A185D3;
         color: white;
         border: none;
         padding: 10px 20px;
@@ -164,7 +162,7 @@
     }
 
     .btn-download:hover {
-        background-color: rgba(161, 133, 211, 0.7); /* Обновлено на нужный цвет */
+        background-color: rgba(161, 133, 211, 0.7);
         transform: scale(1.05);
     }
 
@@ -174,14 +172,14 @@
     }
 
     .book-info h1 {
-        color: #3D2765; /* Обновлено на нужный цвет */
+        color: #3D2765;
         font-family: 'Lora', serif;
         font-size: 2.5rem;
         margin-bottom: 20px;
     }
 
     .book-info h3, .book-info h4, .book-info h5 {
-        color: #3D2765; /* Обновлено на нужный цвет */
+        color: #3D2765;
         margin-top: 20px;
         font-family: 'Lora', serif;
     }
@@ -215,7 +213,7 @@
     }
 
     .btn-primary {
-        background-color: #A185D3; /* Обновлено на нужный цвет */
+        background-color: #A185D3;
         color: white;
         border: none;
         padding: 8px 16px;
@@ -228,7 +226,7 @@
     }
 
     .btn-primary:hover {
-        background-color: rgba(161, 133, 211, 0.7); /* Обновлено на нужный цвет */
+        background-color: rgba(161, 133, 211, 0.7);
         transform: scale(1.05);
     }
 
@@ -262,7 +260,7 @@
     }
 
     .comment-form button {
-        background-color: #A185D3; /* Обновлено на нужный цвет */
+        background-color: #A185D3;
         color: white;
         border: none;
         padding: 10px 20px;
@@ -273,35 +271,37 @@
     }
 
     .comment-form button:hover {
-        background-color: rgba(161, 133, 211, 0.7); /* Обновлено на нужный цвет */
+        background-color: rgba(161, 133, 211, 0.7);
     }
 
     .status-buttons {
         margin-top: 20px;
+        display: flex;
+        gap: 10px;
     }
 
     .btn-status {
-        background-color: #A185D3; /* Обновлено на нужный цвет */
+        background-color: #A185D3;
         color: white;
         border: none;
         padding: 10px 20px;
         border-radius: 8px;
         font-size: 1rem;
         transition: background-color 0.3s ease;
+        text-decoration: none;
+        text-align: center;
     }
 
     .btn-status:hover {
-        background-color: rgba(161, 133, 211, 0.7); /* Обновлено на нужный цвет */
+        background-color: rgba(161, 133, 211, 0.7);
         color: white;
     }
 </style>
-
 
 <script>
     document.getElementById('submitComment').addEventListener('click', function () {
         const commentText = document.getElementById('commentText').value;
         const bookId = @Model.Id;
-        console.log(bookId);
 
         if (commentText.trim() === "") {
             alert("Комментарий не может быть пустым.");
@@ -309,17 +309,17 @@
         }
 
         $.ajax({
-            url: '@Url.Action("AddComment", "Comment")',  // URL к вашему методу
+            url: '@Url.Action("AddComment", "Comment")',
             type: 'POST',
-            data: {bookId: bookId, commentText: commentText},  // Отправляем bookId
+            data: {bookId: bookId, commentText: commentText},
             xhrFields: {
-                withCredentials: true  // Обеспечиваем передачу сессионных данных
+                withCredentials: true
             },
             success: function (response) {
                 location.reload();
             },
             error: function () {
-                alert("Произошла ошибка при добавлении книги в избранное.");
+                alert("Произошла ошибка при добавлении комментария.");
             }
         });
     });
@@ -327,8 +327,6 @@
     document.getElementById('changeStatus').addEventListener('click', function () {
         const bookId = @Model.Id;
         const status = this.getAttribute('data-status');
-        console.log(bookId);
-        console.log(status);
 
         if (bookId) {
             $.ajax({

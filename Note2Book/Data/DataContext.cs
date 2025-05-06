@@ -39,6 +39,6 @@ public class DataContext : DbContext
     public DbSet<Citation> Citations { get; set; }
     
     public DbSet<Activity> Activities { get; set; }
-    public DbSet<Chat> Chats { get; set; }
-    public DbSet<Message> Messages { get; set; }
+    public DbSet<Forum> Forums { get; set; }
+    public DbSet<ForumMessage> ForumMessages { get; set; }
 }
